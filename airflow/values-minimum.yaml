@@ -1,0 +1,91 @@
+resources-template: &resources-template
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+
+ingress:
+  apiServer:
+    enabled: true
+    hosts:
+      - name: airflow.local
+        tls:
+          enabled: true
+          secretName: wildcard-local-tls
+    ingressClassName: nginx
+  flower:
+    enabled: true
+    hosts:
+      - name: flower.local
+        tls:
+          enabled: true
+          secretName: wildcard-local-tls
+    ingressClassName: nginx    
+
+workers:
+  # Resource configuration for Airflow Celery workers and pods created with pod-template-file
+  <<: *resources-template
+
+scheduler:
+  <<: *resources-template
+
+apiServer:
+  <<: *resources-template
+
+webserver:
+  <<: *resources-template
+
+triggerer:
+  <<: *resources-template
+
+dagProcessor:
+  <<: *resources-template
+
+flower:
+  <<: *resources-template
+  enabled: true
+
+statsd:
+  enabled: false
+
+redis:
+  <<: *resources-template
+
+# Git sync
+dags:
+  gitSync:
+    enabled: true
+    # git repo clone url
+    # ssh example: git@github.com:apache/airflow.git
+    # https example: https://github.com/apache/airflow.git
+    repo: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/de/dags.git
+    branch: main
+    # The git revision (branch, tag, or hash) to check out, v4 only
+    ref: HEAD
+    depth: 1
+    # the number of consecutive failures allowed before aborting
+    maxFailures: 0
+    # subpath within the repo where dags are located
+    # should be "" if dags are at repo root
+    subPath: "/"
+    # if your repo needs a user name password
+    # you can load them to a k8s secret like the one below
+    #   ---
+    #   apiVersion: v1
+    #   kind: Secret
+    #   metadata:
+    #     name: git-credentials
+    #   data:
+    #     # For git-sync v3
+    #     GIT_SYNC_USERNAME: <base64_encoded_git_username>
+    #     GIT_SYNC_PASSWORD: <base64_encoded_git_password>
+    #     # For git-sync v4
+    #     GITSYNC_USERNAME: <base64_encoded_git_username>
+    #     GITSYNC_PASSWORD: <base64_encoded_git_password>
+    # and specify the name of the secret below
+    #
+    credentialsSecret: git-credentials

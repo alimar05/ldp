@@ -1,0 +1,73 @@
+resources-template: &resources-template
+  resources:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+
+global:
+  edition: ce
+  ingress:
+    configureCertmanager: false
+    class: nginx
+    enabled: true
+    tls:
+      enabled: true
+      secretName: wildcard-local-tls
+  hosts:
+    https: true
+    domain: gitlab.local
+    gitlab:
+      name: gitlab.local
+
+  # Disable Rails bootsnap cache (temporary)
+  rails:
+    bootsnap:
+      enabled: false
+  shell:
+    # Configure the clone link in the UI to include the high-numbered NodePort
+    # value from below (`gitlab.gitlab-shell.service.nodePort`)
+    port: 32022
+
+# Don't use certmanager, we'll self-sign
+installCertmanager: false
+
+nginx-ingress:
+  enabled: false
+  controller:
+    replicaCount: 1
+prometheus:
+  install: false
+gitlab-runner:
+  install: true
+
+# Reduce replica counts, reducing CPU & memory requirements
+gitlab:
+  registry:
+    enabled: true
+    hpa:
+      minReplicas: 1
+      maxReplicas: 1
+  gitlab-exporter:
+    enabled: false
+  toolbox:
+    enabled: false
+  kas:
+    minReplicas: 1
+    maxReplicas: 1
+  webservice:
+    minReplicas: 1
+    maxReplicas: 1
+  sidekiq:
+    minReplicas: 1
+    maxReplicas: 1
+  gitlab-shell:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 1
+    service:
+      type: NodePort
+      nodePort: 32022
