@@ -2,6 +2,7 @@
 {{- $fullName := include "minio.fullname" . -}}
 {{- $servicePort := .Values.service.port -}}
 {{- $ingressPath := .Values.ingress.path -}}
+{{- $pathType := .Values.ingress.pathType -}}
 apiVersion: {{ template "minio.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -35,11 +36,15 @@ spec:
     - http:
         paths:
           - path: {{ $ingressPath }}
+            pathType: {{ $pathType }}
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $servicePort }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $servicePort }}
       {{- if . }}
       host: {{ . | quote }}
       {{- end }}
   {{- end }}
+  ingressClassName: {{ .Values.ingress.ingressClassName }}
 {{- end }}
