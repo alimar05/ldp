@@ -2,7 +2,7 @@ resources-template: &resources-template
   resources:
     limits:
       cpu: 1
-      memory: 1Gi
+      memory: 2Gi
     requests:
       cpu: 100m
       memory: 128Mi
@@ -24,11 +24,12 @@ ingress:
         tls:
           enabled: true
           secretName: wildcard-local-tls
-    ingressClassName: nginx    
+    ingressClassName: nginx
 
-workers:
-  # Resource configuration for Airflow Celery workers and pods created with pod-template-file
-  <<: *resources-template
+
+# workers:
+#   # Resource configuration for Airflow Celery workers and pods created with pod-template-file
+#   <<: *resources-template
 
 scheduler:
   <<: *resources-template
@@ -54,6 +55,7 @@ statsd:
 
 redis:
   <<: *resources-template
+
 
 # Git sync
 dags:
