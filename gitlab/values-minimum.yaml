@@ -1,12 +1,11 @@
-resources-template: &resources-template
-  resources:
-    limits:
-      cpu: 1
-      memory: 1Gi
-    requests:
-      cpu: 100m
-      memory: 128Mi
-
+# resources-template: &resources-template
+#   resources:
+#     limits:
+#       cpu: 1
+#       memory: 2Gi
+#     requests:
+#       cpu: 100m
+#       memory: 128Mi
 
 global:
   edition: ce
@@ -22,6 +21,46 @@ global:
     domain: gitlab.local
     gitlab:
       name: gitlab.local
+### Настройка внешнего obs.
+# ### Настройка внешнего postgres. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-database.yaml
+# postgresql:
+#   install: false
+#   psql:
+#     host: production.postgress.hostname.local
+#     password:
+#       secret: my-postgres-secret # https://gitlab.com/gitlab-org/charts/gitlab/blob/master/doc/installation/secrets.md#postgresql-secret
+#       key: secret
+#     port: 5432
+#     database: mydb
+#     username: myusername
+# ###
+### Настройка внешнего obs. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-objectstorage.yaml
+  minio:
+    enabled: false
+  appConfig:
+    artifacts:
+      bucket: gitlab-artifacts-storage
+    backups:
+      bucket: gitlab-backup-storage
+      tmpBucket: gitlab-tmp-storage
+    lfs:
+      bucket: gitlab-lfs-storage
+    object_store:
+      connection:
+        secret: gitlab-object-storage # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/objectstorage/rails.minio.yaml
+      enabled: true
+      proxy_download: false
+    packages:
+      bucket: gitlab-packages-storage
+    uploads:
+      bucket: gitlab-uploads-storage
+  registry:
+    bucket: gitlab-registry-storage
+registry:
+  storage:
+    secret: gitlab-registry-storage # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/objectstorage/registry.minio.yaml
+    key: config
+
 
   # Disable Rails bootsnap cache (temporary)
   rails:
