@@ -1,0 +1,12 @@
+# global-config.yaml
+apiVersion: k8s.nginx.org/v1
+kind: GlobalConfiguration
+metadata:
+  name: global-configuration
+  namespace: nginx-ingress
+spec:
+  listeners:
+    - name: postgresql-listener
+      port: 5432
+      protocol: TCP
+      ssl: false
