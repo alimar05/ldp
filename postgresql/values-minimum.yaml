@@ -10,11 +10,39 @@ image:
 ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#setting-the-root-password-on-first-run
 postgresqlUsername: postgres
 
+# initdb scripts
+# Specify dictionary of scripts to be run at first boot
+# Alternatively, you can put your scripts under the files/docker-entrypoint-initdb.d directory
+#
+initdbScripts:
+  util_functions.sql: |
+    -- Функция для создания пользователя, если нет
+    CREATE OR REPLACE FUNCTION create_user_if_not_exists(username TEXT, password TEXT) 
+    RETURNS void AS $$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = username) THEN
+            EXECUTE format('CREATE USER %I WITH PASSWORD %L', username, password);
+            RAISE NOTICE 'User % created', username;
+        ELSE
+            RAISE NOTICE 'User % already exists', username;
+        END IF;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    -- Функция для выдачи прав на схему
+    CREATE OR REPLACE FUNCTION grant_database_privileges(dbname TEXT, username TEXT) 
+    RETURNS void AS $$
+    BEGIN
+        EXECUTE format('GRANT ALL ON DATABASE %I TO %I', dbname, username);
+        RAISE NOTICE 'Privileges granted to % on database %', username, dbname;
+    END;
+    $$ LANGUAGE plpgsql;
+
 # PostgreSQL password using existing secret
 existingSecret: postgresql-credentials
 
 persistence:
-  size: 32Gi
+  size: 100Gi
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/

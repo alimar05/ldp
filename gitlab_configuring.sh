@@ -1,6 +1,11 @@
 #!/bin/bash
 
 NAMESPACE="gitlab"
+# Postgresql
+PSQL_COMMAND="psql -h postgresql.postgresql.svc.cluster.local -p 5432 -U postgres"
+USERNAME="gitlab"
+PASSWORD="gitlab"
+DATABASE="gitlab"
 # Secret for Rails
 PROVIDER="AWS"
 REGION="us-east-1"
@@ -13,6 +18,30 @@ PATH_STYLE="true"
 ACCESS_KEY=$AWS_ACCESS_KEY_ID
 SECRET_KEY=$AWS_SECRET_ACCESS_KEY_ID
 V4_AUTH="true"
+
+# Прежде всего в postgresql должна быть создан user gitlab и database gitlab со всеми привилегиями для user gitlab
+kubectl run -it -n ${NAMESPACE} --rm psql \
+  --image=bitnamilegacy/postgresql:16.1.0-debian-11-r25 \
+  --env=PGPASSWORD=postgres \
+  --restart=Never \
+  --command -- /bin/sh -c "\
+  -- https://stackoverflow.com/a/18389184
+  echo \"SELECT 'CREATE DATABASE gitlab' WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'gitlab')\gexec\" | \
+  ${PSQL_COMMAND} -d postgres \
+  && ${PSQL_COMMAND} -d postgres \
+  -c \"SELECT create_user_if_not_exists('${USERNAME}', '${PASSWORD}');SELECT grant_database_privileges('${DATABASE}', '${USERNAME}');\"
+  
+  ${PSQL_COMMAND} -d ${DATABASE} -c \
+  \"-- Права на схему public (разрешает создание объектов)
+  GRANT ALL ON SCHEMA public TO ${USERNAME};
+  -- Для будущих объектов в схеме public
+  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO ${USERNAME};
+  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO ${USERNAME};
+  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO ${USERNAME};\""
+
+kubectl create secret generic external-postgresql-secret -n ${NAMESPACE} \
+    --from-literal=secret="${PASSWORD}" \
+    --dry-run=client -o yaml | kubectl apply -f -
 
 # Прежде всего в minio должны быть созданы бакеты согласно https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/doc/advanced/external-object-storage/minio.md
 kubectl run -it -n ${NAMESPACE} --rm minio-cli \
@@ -51,3 +80,4 @@ kubectl create secret generic gitlab-registry-storage -n ${NAMESPACE} \
     accesskey: ${AWS_ACCESS_KEY_ID}
     secretkey: ${AWS_SECRET_ACCESS_KEY_ID}" \
     --dry-run=client -o yaml | kubectl apply -f -
+
