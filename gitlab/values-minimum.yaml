@@ -21,19 +21,17 @@ global:
     domain: gitlab.local
     gitlab:
       name: gitlab.local
-### Настройка внешнего obs.
-# ### Настройка внешнего postgres. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-database.yaml
-# postgresql:
-#   install: false
-#   psql:
-#     host: production.postgress.hostname.local
-#     password:
-#       secret: my-postgres-secret # https://gitlab.com/gitlab-org/charts/gitlab/blob/master/doc/installation/secrets.md#postgresql-secret
-#       key: secret
-#     port: 5432
-#     database: mydb
-#     username: myusername
-# ###
+### Настройка внешнего postgres. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-database.yaml
+  psql:
+    host: postgresql.postgresql.svc.cluster.local
+    password:
+      secret: external-postgresql-secret # https://gitlab.com/gitlab-org/charts/gitlab/blob/master/doc/installation/secrets.md#postgresql-secret
+      key: secret
+    port: 5432
+    database: gitlab
+    username: gitlab
+postgresql:
+  install: false
 ### Настройка внешнего obs. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-objectstorage.yaml
   minio:
     enabled: false
@@ -80,9 +78,31 @@ nginx-ingress:
     replicaCount: 1
 prometheus:
   install: false
-gitlab-runner:
-  install: true
 
+## Installation & configuration of gitlab/gitlab-runner
+## See dependencies in Chart.yaml for current version
+gitlab-runner:
+  gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181
+  runners:
+    config: |
+      [[runners]]
+        url = "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181"
+        clone_url = "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181" 
+        [runners.kubernetes]
+        image = "ubuntu:22.04"
+        # "arm64" или "x86_64" зависит от платформы
+        helper_image = "registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:arm64-v18.6.3"
+        {{- if .Values.global.minio.enabled }}
+        [runners.cache]
+          Type = "s3"
+          Path = "gitlab-runner"
+          Shared = true
+          [runners.cache.s3]
+            ServerAddress = {{ include "gitlab-runner.cache-tpl.s3ServerAddress" . }}
+            BucketName = "runner-cache"
+            BucketLocation = "us-east-1"
+            Insecure = false
+        {{ end }}
 # Reduce replica counts, reducing CPU & memory requirements
 gitlab:
   registry:
