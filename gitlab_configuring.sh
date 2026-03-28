@@ -6,6 +6,9 @@ PSQL_COMMAND="psql -h postgresql.postgresql.svc.cluster.local -p 5432 -U postgre
 USERNAME="gitlab"
 PASSWORD="gitlab"
 DATABASE="gitlab"
+# https://docs.gitlab.com/administration/postgresql/external/#container-registry-metadata-database
+DATABASE_REGISTRY="registry"
+PASSWORD_REGISTRY="registry"
 # Secret for Rails
 PROVIDER="AWS"
 REGION="us-east-1"
@@ -19,25 +22,18 @@ ACCESS_KEY=$AWS_ACCESS_KEY_ID
 SECRET_KEY=$AWS_SECRET_ACCESS_KEY_ID
 V4_AUTH="true"
 
-# Прежде всего в postgresql должна быть создан user gitlab и database gitlab со всеми привилегиями для user gitlab
+# Прежде всего в postgresql должны быть созданы user и database
 kubectl run -it -n ${NAMESPACE} --rm psql \
   --image=bitnamilegacy/postgresql:16.1.0-debian-11-r25 \
   --env=PGPASSWORD=postgres \
   --restart=Never \
   --command -- /bin/sh -c "\
-  -- https://stackoverflow.com/a/18389184
-  echo \"SELECT 'CREATE DATABASE gitlab' WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'gitlab')\gexec\" | \
-  ${PSQL_COMMAND} -d postgres \
-  && ${PSQL_COMMAND} -d postgres \
-  -c \"SELECT create_user_if_not_exists('${USERNAME}', '${PASSWORD}');SELECT grant_database_privileges('${DATABASE}', '${USERNAME}');\"
-  
-  ${PSQL_COMMAND} -d ${DATABASE} -c \
-  \"-- Права на схему public (разрешает создание объектов)
-  GRANT ALL ON SCHEMA public TO ${USERNAME};
-  -- Для будущих объектов в схеме public
-  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO ${USERNAME};
-  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO ${USERNAME};
-  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO ${USERNAME};\""
+  ${PSQL_COMMAND} -d postgres -c \"SELECT create_user_if_not_exists('${USERNAME}', '${PASSWORD}');SELECT create_user_if_not_exists('registry', '${PASSWORD_REGISTRY}')\"
+  # https://stackoverflow.com/a/18389184
+  echo \"SELECT 'CREATE DATABASE ${DATABASE} OWNER ${USERNAME}' WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${DATABASE}')\gexec\" | \
+  ${PSQL_COMMAND} -d postgres
+  echo \"SELECT 'CREATE DATABASE ${DATABASE_REGISTRY} OWNER registry' WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${DATABASE_REGISTRY}')\gexec\" | \
+  ${PSQL_COMMAND} -d postgres"
 
 kubectl create secret generic external-postgresql-secret -n ${NAMESPACE} \
     --from-literal=secret="${PASSWORD}" \

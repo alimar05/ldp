@@ -29,15 +29,6 @@ initdbScripts:
     END;
     $$ LANGUAGE plpgsql;
 
-    -- Функция для выдачи прав на схему
-    CREATE OR REPLACE FUNCTION grant_database_privileges(dbname TEXT, username TEXT) 
-    RETURNS void AS $$
-    BEGIN
-        EXECUTE format('GRANT ALL ON DATABASE %I TO %I', dbname, username);
-        RAISE NOTICE 'Privileges granted to % on database %', username, dbname;
-    END;
-    $$ LANGUAGE plpgsql;
-
 # PostgreSQL password using existing secret
 existingSecret: postgresql-credentials
 
