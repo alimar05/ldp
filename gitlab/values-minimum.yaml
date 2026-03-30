@@ -21,7 +21,7 @@ global:
     domain: gitlab.local
     gitlab:
       name: gitlab.local
-### Настройка внешнего postgres. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-database.yaml
+  ### Настройка внешнего postgres. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-database.yaml
   psql:
     host: postgresql.postgresql.svc.cluster.local
     password:
@@ -30,9 +30,7 @@ global:
     port: 5432
     database: gitlab
     username: gitlab
-postgresql:
-  install: false
-### Настройка внешнего obs. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-objectstorage.yaml
+  ### Настройка внешнего obs. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-objectstorage.yaml
   minio:
     enabled: false
   appConfig:
@@ -54,20 +52,27 @@ postgresql:
       bucket: gitlab-uploads-storage
   registry:
     bucket: gitlab-registry-storage
+
 registry:
+  # https://docs.gitlab.com/charts/charts/registry/metadata_database/#enable-for-new-registries
+  enabled: true
+  database:
+    enabled: true
+    name: registry  # must match the database name you created above
+    user: registry  # must match the database username you created above
+    password:
+      secret: external-postgresql-registry-secret # must match the secret name
+      key: password  # must match the secret key to read the password from
+  migrations:
+    enabled: true
   storage:
-    secret: gitlab-registry-storage # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/objectstorage/registry.minio.yaml
+    secret: gitlab-registry-storage # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/objectstorage/registry.s3.yaml
     key: config
+  hpa:
+    minReplicas: 1
+    maxReplicas: 1
+  # docker login gitlab-registry.gitlab.svc.cluster.local:5000 -u admin
 
-
-  # Disable Rails bootsnap cache (temporary)
-  rails:
-    bootsnap:
-      enabled: false
-  shell:
-    # Configure the clone link in the UI to include the high-numbered NodePort
-    # value from below (`gitlab.gitlab-shell.service.nodePort`)
-    port: 32022
 
 # Don't use certmanager, we'll self-sign
 installCertmanager: false
@@ -77,6 +82,8 @@ nginx-ingress:
   controller:
     replicaCount: 1
 prometheus:
+  install: false
+postgresql:
   install: false
 
 ## Installation & configuration of gitlab/gitlab-runner
@@ -105,11 +112,6 @@ gitlab-runner:
         {{ end }}
 # Reduce replica counts, reducing CPU & memory requirements
 gitlab:
-  registry:
-    enabled: true
-    hpa:
-      minReplicas: 1
-      maxReplicas: 1
   gitlab-exporter:
     enabled: false
   toolbox:
@@ -125,8 +127,3 @@ gitlab:
     maxReplicas: 1
   gitlab-shell:
     enabled: false
-    minReplicas: 1
-    maxReplicas: 1
-    service:
-      type: NodePort
-      nodePort: 32022
