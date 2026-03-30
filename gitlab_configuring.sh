@@ -29,7 +29,7 @@ kubectl run -it -n ${NAMESPACE} --rm psql \
   --restart=Never \
   --command -- /bin/sh -c "\
   ${PSQL_COMMAND} -d postgres -c \"SELECT create_user_if_not_exists('${USERNAME}', '${PASSWORD}');SELECT create_user_if_not_exists('registry', '${PASSWORD_REGISTRY}')\"
-  # https://stackoverflow.com/a/18389184
+  # Создать database, если не существует (https://stackoverflow.com/a/18389184)
   echo \"SELECT 'CREATE DATABASE ${DATABASE} OWNER ${USERNAME}' WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${DATABASE}')\gexec\" | \
   ${PSQL_COMMAND} -d postgres
   echo \"SELECT 'CREATE DATABASE ${DATABASE_REGISTRY} OWNER registry' WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '${DATABASE_REGISTRY}')\gexec\" | \
@@ -39,18 +39,23 @@ kubectl create secret generic external-postgresql-secret -n ${NAMESPACE} \
     --from-literal=secret="${PASSWORD}" \
     --dry-run=client -o yaml | kubectl apply -f -
 
+kubectl create secret generic external-postgresql-registry-secret -n ${NAMESPACE} \
+    --from-literal=password="${PASSWORD_REGISTRY}" \
+    --dry-run=client -o yaml | kubectl apply -f -
+
 # Прежде всего в minio должны быть созданы бакеты согласно https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/doc/advanced/external-object-storage/minio.md
 kubectl run -it -n ${NAMESPACE} --rm minio-cli \
   --image=minio/mc \
   --restart=Never \
   --command -- /bin/sh -c "\
     mc alias set obs ${ENDPOINT} ${AWS_ACCESS_KEY_ID} '${AWS_SECRET_ACCESS_KEY_ID}' \
+    && mc mb --ignore-existing obs/gitlab-artifacts-storage \
     && mc mb --ignore-existing obs/gitlab-backup-storage \
+    && mc mb --ignore-existing obs/gitlab-tmp-storage \
     && mc mb --ignore-existing obs/gitlab-lfs-storage \
     && mc mb --ignore-existing obs/gitlab-packages-storage \
     && mc mb --ignore-existing obs/gitlab-uploads-storage \
-    && mc mb --ignore-existing obs/gitlab-registry-storage \
-    && mc mb --ignore-existing obs/gitlab-tmp-storage"
+    && mc mb --ignore-existing obs/gitlab-registry-storage"
 
 kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
