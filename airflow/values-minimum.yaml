@@ -26,6 +26,12 @@ ingress:
           secretName: wildcard-local-tls
     ingressClassName: nginx
 
+data:
+  metadataSecretName: external-postgresql-secret
+
+databaseCleanup:
+  enabled: true
+  retentionDays: 90
 
 # workers:
 #   # Resource configuration for Airflow Celery workers and pods created with pod-template-file
@@ -56,6 +62,8 @@ statsd:
 redis:
   <<: *resources-template
 
+postgresql:
+  enabled: false
 
 # Git sync
 dags:
