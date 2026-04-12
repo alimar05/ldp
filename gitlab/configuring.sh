@@ -57,8 +57,6 @@ kubectl run -it -n ${NAMESPACE} --rm minio-cli \
     && mc mb --ignore-existing obs/gitlab-uploads-storage \
     && mc mb --ignore-existing obs/gitlab-registry-storage"
 
-kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
-
 ## Создаём секреты, если их нет
 # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/objectstorage/rails.minio.yaml
 kubectl create secret generic gitlab-object-storage -n ${NAMESPACE} \
