@@ -1,6 +1,14 @@
-1. vault-operator deployed.
-  
-  Check the vault-operator logs
 
-    export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "vault-operator.name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-    kubectl logs $POD_NAME --namespace={{ .Release.Namespace }}
+Thank you for installing HashiCorp Vault!
+
+Now that you have deployed Vault, you should look over the docs on using
+Vault with Kubernetes available here:
+
+https://developer.hashicorp.com/vault/docs
+
+
+Your release is named {{ .Release.Name }}. To learn more about the release, try:
+
+  $ helm status {{ .Release.Name }}
+  $ helm get manifest {{ .Release.Name }}
+

@@ -1,10 +1,19 @@
-apiVersion: v1
-description: DEPRECATED - CoreOS vault-operator Helm chart for Kubernetes
-name: vault-operator
-version: 0.1.4
-appVersion: 0.1.9
-home: https://github.com/coreos/vault-operator
-icon: https://s3.amazonaws.com/hashicorp-marketing-web-assets/brand/Vault_VerticalLogo_FullColor.B1xPC0pSax.svg
+# Copyright IBM Corp. 2018, 2025
+# SPDX-License-Identifier: MPL-2.0
+
+apiVersion: v2
+name: vault
+version: 0.32.0
+appVersion: 1.21.2
+kubeVersion: ">= 1.20.0-0"
+description: Official HashiCorp Vault Chart
+home: https://www.vaultproject.io
+icon: https://github.com/hashicorp/vault/raw/f22d202cde2018f9455dec755118a9b84586e082/Vault_PrimaryLogo_Black.png
+keywords: ["vault", "security", "encryption", "secrets", "management", "automation", "infrastructure"]
 sources:
-- https://github.com/coreos/vault-operator
-deprecated: true
+  - https://github.com/hashicorp/vault
+  - https://github.com/hashicorp/vault-helm
+  - https://github.com/hashicorp/vault-k8s
+  - https://github.com/hashicorp/vault-csi-provider
+annotations:
+  charts.openshift.io/name: HashiCorp Vault

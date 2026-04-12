@@ -2,8 +2,8 @@
 
 # Указать домены где требуется сертификат и namespace в котором будет развёрнут k8s secret
 # Если не хотите видеть в браузере Not Secure, придётся добавить домен в список
-DOMAINS=("airflow.local" "flower.local" "gitlab.local" "minio.local")
-namespaces=("airflow" "gitlab" "minio")
+DOMAINS=("airflow.local" "flower.local" "gitlab.local" "minio.local" "vault.local")
+namespaces=("airflow" "gitlab" "minio" "vault")
 # В случае изменении SECRET_NAME, необходимо поменять во всех values-minimum.yaml для helm
 SECRET_NAME="wildcard-local-tls"
 
