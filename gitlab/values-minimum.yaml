@@ -1,12 +1,3 @@
-# resources-template: &resources-template
-#   resources:
-#     limits:
-#       cpu: 1
-#       memory: 2Gi
-#     requests:
-#       cpu: 100m
-#       memory: 128Mi
-
 global:
   edition: ce
   ingress:
@@ -85,6 +76,11 @@ prometheus:
   install: false
 postgresql:
   install: false
+redis:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
 
 ## Installation & configuration of gitlab/gitlab-runner
 ## See dependencies in Chart.yaml for current version
@@ -119,11 +115,36 @@ gitlab:
   kas:
     minReplicas: 1
     maxReplicas: 1
+    resources:
+      limits:
+        memory: 900Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
   webservice:
     minReplicas: 1
     maxReplicas: 1
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: 100m
+        memory: 900Mi
+    workhorse:
+      resources:
+        limits:
+          memory: 100Mi
+        requests:
+          cpu: 10m
+          memory: 10Mi
   sidekiq:
     minReplicas: 1
     maxReplicas: 1
+    resources:
+      limits:
+        memory: 1.5Gi
+      requests:
+        cpu: 50m
+        memory: 625Mi
   gitlab-shell:
     enabled: false
