@@ -17,6 +17,9 @@ server:
           - vault.local
 
   extraSecretEnvironmentVars:
+    - envName: VAULT_TOKEN
+      secretName: vault-root-token
+      secretKey: VAULT_ROOT_TOKEN
     - envName: VAULT_UNSEAL_KEY_1
       secretName: vault-unseal-keys
       secretKey: VAULT_UNSEAL_KEY_1
@@ -40,6 +43,22 @@ server:
       vault operator unseal "$VAULT_UNSEAL_KEY_1" >/dev/null 2>&1;
       vault operator unseal "$VAULT_UNSEAL_KEY_2" >/dev/null 2>&1;
       vault operator unseal "$VAULT_UNSEAL_KEY_3" >/dev/null 2>&1;
+      
+      vault write auth/kubernetes/config \
+        kubernetes_host="https://kubernetes.default.svc:443" \
+        kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+        token_reviewer_jwt=@/var/run/secrets/kubernetes.io/serviceaccount/token;
+
+      echo 'path "airflow/data/connections/*" {
+        capabilities = ["read", "list"]
+      }' | vault policy write airflow-policy -;
+
+      vault write auth/kubernetes/role/airflow-role \
+        bound_service_account_names="airflow-worker,airflow-scheduler,airflow-api-server" \
+        bound_service_account_namespaces="airflow" \
+        policies="airflow-policy";
+
+      vault kv put airflow/connections/pg_default conn_type="postgres" host="postgresql.postgresql.svc.cluster.local" database="postgres" login="postgres" password="postgres" port="5432";
 
   standalone:
     enabled: true

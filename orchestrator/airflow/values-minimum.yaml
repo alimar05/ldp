@@ -65,6 +65,11 @@ redis:
 postgresql:
   enabled: false
 
+config:
+  secrets:
+    backend: airflow.providers.hashicorp.secrets.vault.VaultBackend
+    backend_kwargs: '{"connections_path": "connections", "mount_point": "airflow", "url": "http://vault-internal.vault.svc.cluster.local:8200", "auth_type": "kubernetes", "kubernetes_role": "airflow-role", "auth_mount_point": "kubernetes"}'
+
 # Git sync
 dags:
   gitSync:
