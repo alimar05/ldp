@@ -22,6 +22,9 @@ ACCESS_KEY=$AWS_ACCESS_KEY_ID
 SECRET_KEY=$AWS_SECRET_ACCESS_KEY_ID
 V4_AUTH="true"
 
+# Создать namespace
+kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+
 # Прежде всего в postgresql должны быть созданы user и database
 kubectl run -it -n ${NAMESPACE} --rm psql \
   --image=bitnamilegacy/postgresql:16.1.0-debian-11-r25 \
