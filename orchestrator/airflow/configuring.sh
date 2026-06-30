@@ -1,21 +1,20 @@
 #!/bin/bash
 
 NAMESPACE="airflow"
-# gitSync
-GITSYNC_USERNAME="airflow"
-GITSYNC_PASSWORD="glpat-vk6-ev2hmQDKQGV2avl95W86MQp1OjQH.01.0w0hkv4mr"
+# airflow-gitlab-connection
+GIT_PERSONAL_ACCESS_TOKEN="glpat-vk6-ev2hmQDKQGV2avl95W86MQp1OjQH.01.0w0hkv4mr"
 # airflow metadata
 PSQL_COMMAND="psql -h postgresql.postgresql.svc.cluster.local -p 5432 -U postgres"
 USERNAME="airflow"
 PASSWORD="airflow"
 DATABASE="airflow"
 
+# Создать namespace
+kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
-kubectl create secret generic git-credentials -n ${NAMESPACE} \
-    --from-literal=GIT_SYNC_USERNAME=${GITSYNC_USERNAME} \
-    --from-literal=GIT_SYNC_PASSWORD=${GITSYNC_PASSWORD} \
-    --from-literal=GITSYNC_USERNAME=${GITSYNC_USERNAME} \
-    --from-literal=GITSYNC_PASSWORD=${GITSYNC_PASSWORD} \
+# Создать соединение для подтягивания dags из репозитория
+kubectl create secret generic airflow-dags-gitlab-connection -n ${NAMESPACE} \
+    --from-literal=GITLAB_CONN_JSON='{"conn_type": "git", "host": "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/de/dags", "login": "oauth2", "password": "'${GIT_PERSONAL_ACCESS_TOKEN}'"}' \
     --dry-run=client -o yaml | kubectl apply -f -
 
 # Прежде всего в postgresql должны быть созданы user и database
