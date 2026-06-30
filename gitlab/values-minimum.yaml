@@ -1,0 +1,153 @@
+global:
+  edition: ce
+  ingress:
+    configureCertmanager: false
+    class: nginx
+    enabled: true
+    tls:
+      enabled: true
+      secretName: wildcard-local-tls
+  hosts:
+    https: true
+    domain: gitlab.local
+    gitlab:
+      name: gitlab.local
+  ### Настройка внешнего postgres. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-database.yaml
+  psql:
+    host: postgresql.postgresql.svc.cluster.local
+    password:
+      secret: external-postgresql-secret # https://gitlab.com/gitlab-org/charts/gitlab/blob/master/doc/installation/secrets.md#postgresql-secret
+      key: secret
+    port: 5432
+    database: gitlab
+    username: gitlab
+  ### Настройка внешнего obs. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-objectstorage.yaml
+  minio:
+    enabled: false
+  appConfig:
+    artifacts:
+      bucket: gitlab-artifacts-storage
+    backups:
+      bucket: gitlab-backup-storage
+      tmpBucket: gitlab-tmp-storage
+    lfs:
+      bucket: gitlab-lfs-storage
+    object_store:
+      connection:
+        secret: gitlab-object-storage # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/objectstorage/rails.minio.yaml
+      enabled: true
+      proxy_download: false
+    packages:
+      bucket: gitlab-packages-storage
+    uploads:
+      bucket: gitlab-uploads-storage
+  registry:
+    bucket: gitlab-registry-storage
+
+registry:
+  # https://docs.gitlab.com/charts/charts/registry/metadata_database/#enable-for-new-registries
+  enabled: false
+  database:
+    enabled: true
+    name: registry  # must match the database name you created above
+    user: registry  # must match the database username you created above
+    password:
+      secret: external-postgresql-registry-secret # must match the secret name
+      key: password  # must match the secret key to read the password from
+  migrations:
+    enabled: true
+  storage:
+    secret: gitlab-registry-storage # https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/objectstorage/registry.s3.yaml
+    key: config
+  hpa:
+    minReplicas: 1
+    maxReplicas: 1
+  # docker login gitlab-registry.gitlab.svc.cluster.local:5000 -u admin
+
+
+# Don't use certmanager, we'll self-sign
+installCertmanager: false
+
+nginx-ingress:
+  enabled: false
+  controller:
+    replicaCount: 1
+prometheus:
+  install: false
+postgresql:
+  install: false
+redis:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+## Installation & configuration of gitlab/gitlab-runner
+## See dependencies in Chart.yaml for current version
+gitlab-runner:
+  install: false
+  gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181
+  runners:
+    config: |
+      [[runners]]
+        url = "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181"
+        clone_url = "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181" 
+        [runners.kubernetes]
+        image = "ubuntu:22.04"
+        # "arm64" или "x86_64" зависит от платформы
+        helper_image = "registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:arm64-v18.6.3"
+        {{- if .Values.global.minio.enabled }}
+        [runners.cache]
+          Type = "s3"
+          Path = "gitlab-runner"
+          Shared = true
+          [runners.cache.s3]
+            ServerAddress = {{ include "gitlab-runner.cache-tpl.s3ServerAddress" . }}
+            BucketName = "runner-cache"
+            BucketLocation = "us-east-1"
+            Insecure = false
+        {{ end }}
+# Reduce replica counts, reducing CPU & memory requirements
+gitlab:
+  gitlab-exporter:
+    enabled: false
+  toolbox:
+    enabled: false
+  kas:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 1
+    resources:
+      limits:
+        memory: 900Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  webservice:
+    minReplicas: 1
+    maxReplicas: 1
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: 100m
+        memory: 900Mi
+    workhorse:
+      resources:
+        limits:
+          memory: 100Mi
+        requests:
+          cpu: 10m
+          memory: 10Mi
+  sidekiq:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 1
+    resources:
+      limits:
+        memory: 1.5Gi
+      requests:
+        cpu: 50m
+        memory: 625Mi
+  gitlab-shell:
+    enabled: false
