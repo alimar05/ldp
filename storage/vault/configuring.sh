@@ -1,11 +1,14 @@
 #!/bin/bash
 
 NAMESPACE="vault"
-VAULT_ROOT_TOKEN="hvs.ImLBKtKVsSQ6ke4h6pR8Bqt6"
-VAULT_UNSEAL_KEY_1="Oo/S0Wm5rXkZ+isrXdGLuIXyEYLjLssWp7aiNAr+kdFH"
-VAULT_UNSEAL_KEY_2="zJBt6IwtPiP5Mqx13CURg7WPQVBtYiZB8mLuK/NcZm22"
-VAULT_UNSEAL_KEY_3="CW9skMwxs57vzWlFKiJ4easOJijmn0LmFzW5c2il7P6k"
+VAULT_ROOT_TOKEN="hvs.FsNWzPEjvR6OzFsAuohVzm85"
+VAULT_UNSEAL_KEY_1="w5Md279toLSyDbTll6Vt2vP4ZsxS2kwoE1SNcZuBRU5w"
+VAULT_UNSEAL_KEY_2="DB8l67GJ+yt5E8i+AHQWTYmDNHjXfi1CKm2U/ywW3o7L"
+VAULT_UNSEAL_KEY_3="li9DwmE/9RCX6OGUY3XnjOXMlOKo3rHzyrDgm+GRj642"
 
+
+# Создать namespace
+kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl create secret generic vault-root-token -n ${NAMESPACE} \
     --from-literal=VAULT_ROOT_TOKEN=${VAULT_ROOT_TOKEN} \
