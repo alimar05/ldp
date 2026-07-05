@@ -2,8 +2,8 @@
 
 # Указать домены где требуется сертификат и namespace в котором будет развёрнут k8s secret
 # Если не хотите видеть в браузере Not Secure, придётся добавить домен в список
-DOMAINS=("airflow.local" "flower.local" "gitlab.local" "minio.local" "vault.local")
-namespaces=("airflow" "gitlab" "minio" "vault")
+DOMAINS=("airflow.local" "flower.local" "gitlab.local" "minio.local" "vault.local" "nessie.local" "jupyterhub.local")
+namespaces=("airflow" "gitlab" "minio" "vault" "nessie" "jupyterhub")
 # В случае изменении SECRET_NAME, необходимо поменять во всех values-minimum.yaml для helm
 SECRET_NAME="wildcard-local-tls"
 
@@ -58,12 +58,13 @@ echo -e "${GREEN}✅ Сертификат успешно создан: ${CERT_NA
 # 4. Создание TLS-секретов в namespace'ах
 for ns in "${namespaces[@]}"; do
     echo -e "\n${YELLOW}📦 Создаём TLS-секрет для namespace '${ns}'...${NC}"
-
-    # Проверяем, существует ли namespace
-    if ! kubectl get namespace "$ns" &> /dev/null; then
-        echo -e "${RED}❌ Namespace '$ns' не существует. Пропускаем.${NC}"
-        continue
-    fi
+    echo -e "${YELLOW}📦 Создаём namespace ${ns}, если не существует.${NC}"
+    kubectl create namespace ${ns} --dry-run=client -o yaml | kubectl apply -f -
+    # # Проверяем, существует ли namespace
+    # if ! kubectl get namespace "$ns" &> /dev/null; then
+    #     echo -e "${RED}❌ Namespace '$ns' не существует.${NC}"
+    #     continue
+    # fi
 
     # Создаём секрет
     kubectl create secret tls "$SECRET_NAME" \

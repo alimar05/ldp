@@ -9,8 +9,6 @@ USERNAME="airflow"
 PASSWORD="airflow"
 DATABASE="airflow"
 
-# Создать namespace
-kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 # Создать соединение для подтягивания dags из репозитория
 kubectl create secret generic airflow-dags-gitlab-connection -n ${NAMESPACE} \
