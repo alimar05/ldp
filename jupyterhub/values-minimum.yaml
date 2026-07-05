@@ -1,0 +1,52 @@
+proxy:
+  service:
+    type: ClusterIP
+
+singleuser:
+  cloudMetadata:
+    blockWithIptables: false
+  networkPolicy:
+    enabled: false
+  image:
+    name: quay.io/jupyter/pyspark-notebook
+    # Данная версия более универсальна linux/amd64 and linux/arm64/v8
+    tag: java-17.0.8.1
+  cmd: null
+
+
+scheduling:
+  userScheduler:
+    enabled: false
+  userPlaceholder:
+    enabled: false
+
+prePuller:
+  hook:
+    enabled: false
+  continuous:
+    enabled: false
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+    - jupyterhub.local
+  pathType: Prefix
+  annotations:
+    # Включить поддержку WebSocket для сервиса
+    nginx.org/websocket-services: proxy-public
+    nginx.org/proxy-read-timeout: 86400s
+    nginx.org/proxy-send-timeout: 86400s
+    # Таймаут для соединения с бэкендом
+    nginx.org/proxy-connect-timeout: 86400s
+    # Добавляет X-Forwarded-Proto: https в заголовок запроса к бэкенду
+    # Браузер подключается по HTTPS (wss://)
+    # NGINX терминирует TLS и передаёт обычный HTTP на бэкенд
+    # Jupyter Server внутри пода "видит" только HTTP
+    # Без заголовка X-Forwarded-Proto Jupyter не понимает, что снаружи был HTTPS
+    # Это вызывает предупреждения про XSRF и может ломать редиректы
+    nginx.org/proxy-set-headers: "X-Forwarded-Proto"
+  tls:
+   - hosts:
+      - jupyterhub.local
+     secretName: wildcard-local-tls
