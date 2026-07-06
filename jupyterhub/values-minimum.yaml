@@ -7,6 +7,17 @@ singleuser:
     blockWithIptables: false
   networkPolicy:
     enabled: false
+  storage:
+    type: none
+    extraVolumes:
+      - name: notebooks-directory
+        hostPath:
+          path: notebooks
+          type: DirectoryOrCreate
+
+    extraVolumeMounts:
+      - name: notebooks-directory
+        mountPath: /home/jovyan/notebooks
   image:
     name: quay.io/jupyter/pyspark-notebook
     # Данная версия более универсальна linux/amd64 and linux/arm64/v8
