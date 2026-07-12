@@ -1,0 +1,211 @@
+{
+  "allowRemoteResourceManagement": true,
+  "policyEnforcementMode": "PERMISSIVE",
+  "decisionStrategy": "AFFIRMATIVE",
+  "scopes": [
+    {"name": "GET"},
+    {"name": "POST"},
+    {"name": "PUT"},
+    {"name": "DELETE"},
+    {"name": "LIST"},
+    {"name": "MENU"},
+    {"name": "CREATE"},
+    {"name": "UPDATE"},
+    {"name": "READ"},
+    {"name": "WRITE"},
+    {"name": "EDIT"}
+  ],
+  "resources": [
+    {
+      "name": "Dag",
+      "type": "Dag",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Connection",
+      "type": "Connection",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Variable",
+      "type": "Variable",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Pool",
+      "type": "Pool",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Configuration",
+      "type": "Configuration",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "MENU"}]
+    },
+    {
+      "name": "View",
+      "type": "View",
+      "scopes": [{"name": "GET"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Custom",
+      "type": "Custom",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Backfill",
+      "type": "Backfill",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Asset",
+      "type": "Asset",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "AssetAlias",
+      "type": "AssetAlias",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Team",
+      "type": "Team",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Task Instance",
+      "type": "Task Instance",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Dag Run",
+      "type": "Dag Run",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Trigger",
+      "type": "Trigger",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Import Error",
+      "type": "Import Error",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "SLA Miss",
+      "type": "SLA Miss",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "DAG Warning",
+      "type": "DAG Warning",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "DAG Dependency",
+      "type": "DAG Dependency",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Task",
+      "type": "Task",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "User",
+      "type": "User",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Role",
+      "type": "Role",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Job",
+      "type": "Job",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Plugin",
+      "type": "Plugin",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "Provider",
+      "type": "Provider",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+    {
+      "name": "XCom",
+      "type": "XCom",
+      "scopes": [{"name": "GET"}, {"name": "POST"}, {"name": "PUT"}, {"name": "DELETE"}, {"name": "LIST"}, {"name": "MENU"}]
+    },
+
+    {
+      "name": "Required Actions",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Assets",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Audit Log",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Config",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Connections",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Dags",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Docs",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Jobs",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Plugins",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Pools",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Providers",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "Variables",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    },
+    {
+      "name": "XComs",
+      "type": "Menu",
+      "scopes": [{"name": "MENU"}]
+    }
+  ]
+}

@@ -42,6 +42,12 @@ scheduler:
 
 apiServer:
   <<: *resources-template
+  # Example: To enable proxy headers support when running behind a reverse proxy:
+  args: ["bash", "-c", "exec airflow api-server --proxy-headers"]
+  # Example: To configure FORWARDED_ALLOW_IPS when running behind a reverse proxy:
+  env:
+    - name: FORWARDED_ALLOW_IPS
+      value: "*"  # Use "*" for trusted environments, or specify proxy IP ranges for production
 
 webserver:
   <<: *resources-template
@@ -81,3 +87,17 @@ config:
   secrets:
     backend: airflow.providers.hashicorp.secrets.vault.VaultBackend
     backend_kwargs: '{"connections_path": "connections", "mount_point": "airflow", "url": "http://vault-internal.vault.svc.cluster.local:8200", "auth_type": "kubernetes", "kubernetes_role": "airflow-role", "auth_mount_point": "kubernetes"}'
+  # KeycloakAuthManager https://airflow.apache.org/docs/apache-airflow-providers-keycloak/stable/auth-manager/setup/config.html#configure-airflow-to-use-the-keycloak-auth-manager
+  core:
+    auth_manager: airflow.providers.keycloak.auth_manager.keycloak_auth_manager.KeycloakAuthManager
+  keycloak_auth_manager:
+    server_url: http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080
+    realm: master
+    client_id: airflow
+    # Get from keycloak client id credentials
+    client_secret: "CZdirilsz0Y9XhV63DugIUGg9QlgsxJg"
+    
+# Only for dev mode
+extraEnv: |
+  - name: _PIP_ADDITIONAL_REQUIREMENTS
+    value: "apache-airflow-providers-keycloak==0.8.1"
