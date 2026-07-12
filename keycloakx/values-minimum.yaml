@@ -1,11 +1,31 @@
 ## Overrides the default args for the Keycloak container
 args:
   - start
+  - --features=hostname:v2
 
 # Additional environment variables for Keycloak
 extraEnv: |
   - name: KC_HOSTNAME
-    value: "keycloak.local"
+    value: "https://keycloak.local"
+  
+  - name: KC_HOSTNAME_BROWSER
+    value: "https://keycloak.local"
+  
+  - name: KC_HOSTNAME_BACKCHANNEL
+    value: "https://keycloak.local"
+  
+  - name: KC_HOSTNAME_ADMIN
+    value: "https://keycloak.local"
+  
+  - name: KC_HOSTNAME_STRICT
+    value: "false"
+  
+  - name: KC_HOSTNAME_STRICT_HTTPS
+    value: "false"
+  
+  - name: KC_FEATURES
+    value: "hostname:v2"
+  
   - name: KC_BOOTSTRAP_ADMIN_USERNAME
     value: "admin"
   - name: KC_BOOTSTRAP_ADMIN_PASSWORD
@@ -72,5 +92,3 @@ health:
 http:
   # For backwards compatibility reasons we set this to the value used by previous Keycloak versions.
   relativePath: /
-  internalPort: http-internal
-  internalScheme: HTTP
