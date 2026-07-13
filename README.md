@@ -57,21 +57,13 @@
 
 2) Установить содержимое [utils](utils)
 
-    [setup-tls.sh](utils/certs/setup-tls.sh) - выполнит необходимые действия для tls соединения с компонентами. При необходимости добавить в переменную
-    ```
-    DOMAINS=("airflow.local" "flower.local" "gitlab.local" "minio.local" "vault.local" "nessie.local" "jupyterhub.local" "keycloak.local")
-    ```
-    новый домен и добавить в переменную
-    ```
-    namespaces=("airflow" "gitlab" "minio" "vault" "nessie" "jupyterhub" "keycloak")
-    ```
-    новый namespace. Каждый компонент размещается в своём.
+    [setup-tls.sh](utils/certs/setup-tls.sh) - идемотентно выполнит необходимые действия для tls соединения с компонентами
 
-3) [metrics-server](utils/metrics-server/) - нужно для отображения утилизируемых ресурсов локальным кластером k8s.
+    [metrics-server](utils/metrics-server/) - нужно для отображения утилизируемых ресурсов локальным кластером k8s
 
-4) [nginx-ingress](utils/nginx-ingress/) - это reverse proxy для всего локального кластера k8s
+    [nginx-ingress](utils/nginx-ingress/) - это reverse proxy для всего локального кластера k8s
 
-5) Установить необходимые для работы компопненты.
+3) Установить необходимые для работы компопненты
 
 ## Как добавить новый компонент
 1) Необходимо найти и скачать соответствующий helm chart проект
@@ -86,5 +78,18 @@
     `upgrade.sh`
 
     `values-minimum.yaml`
-3) Если компонент использует дополнительные хранилища типа ORDBMS (Object-Relational Database Management System) и/или S3, лучше настроить на единые хранилища [postgresql](storage/postgresql/) и [minio](storage/minio/), добавить в `configuration.sh` идемпотентное создание database и bucket соответственно.
-4) В качестве примера можно использовать [configuration.sh](gitlab/configuring.sh)
+
+3) Если требуется доступ извне локального кластера, необходимо для [setup-tls.sh](utils/certs/setup-tls.sh) добавить в переменную
+    ```
+    DOMAINS=("airflow.local" "flower.local" "gitlab.local" "minio.local" "vault.local" "nessie.local" "jupyterhub.local" "keycloak.local")
+    ```
+    новый домен и добавить в переменную
+    ```
+    namespaces=("airflow" "gitlab" "minio" "vault" "nessie" "jupyterhub" "keycloak")
+    ```
+    новый namespace, т. к. каждый компонент размещается в своём. После чего выполнить bash скрипт.
+
+    Также соответствующий домен нужно добавить в `/etc/hosts`
+
+4) Если компонент использует дополнительные хранилища типа ORDBMS (Object-Relational Database Management System) и/или S3, лучше настроить на единые хранилища [postgresql](storage/postgresql/) и [minio](storage/minio/), добавить в `configuration.sh` идемпотентное создание database и bucket соответственно
+5) В качестве примера можно использовать [configuration.sh](gitlab/configuring.sh)
