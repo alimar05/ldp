@@ -91,5 +91,4 @@
 
     Также соответствующий домен нужно добавить в `/etc/hosts`
 
-4) Если компонент использует дополнительные хранилища типа ORDBMS (Object-Relational Database Management System) и/или S3, лучше настроить на единые хранилища [postgresql](storage/postgresql/) и [minio](storage/minio/), добавить в `configuration.sh` идемпотентное создание database и bucket соответственно
-5) В качестве примера можно использовать [configuration.sh](gitlab/configuring.sh)
+4) Если компонент использует дополнительные хранилища типа ORDBMS (Object-Relational Database Management System) и/или S3, лучше настроить на единые хранилища [postgresql](storage/postgresql/) и [minio](storage/minio/), добавить в `configuration.sh` идемпотентное создание database и bucket соответственно. В качестве примера можно использовать [configuration.sh](gitlab/configuring.sh)
