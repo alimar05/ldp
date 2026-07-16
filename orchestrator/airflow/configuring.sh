@@ -8,6 +8,8 @@ PSQL_COMMAND="psql -h postgresql.postgresql.svc.cluster.local -p 5432 -U postgre
 USERNAME="airflow"
 PASSWORD="airflow"
 DATABASE="airflow"
+# Get from Keycloak UI
+CLIENT_SECRET="CZdirilsz0Y9XhV63DugIUGg9QlgsxJg"
 
 
 # Создать соединение для подтягивания dags из репозитория

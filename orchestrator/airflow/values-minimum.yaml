@@ -95,7 +95,7 @@ config:
     realm: master
     client_id: airflow
     # Get from keycloak client id credentials
-    client_secret: "CZdirilsz0Y9XhV63DugIUGg9QlgsxJg"
+    client_secret:
     
 # Only for dev mode
 extraEnv: |
