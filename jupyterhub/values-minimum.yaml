@@ -11,8 +11,9 @@ hub:
       authenticator_class: oauthenticator.generic.GenericOAuthenticator
     GenericOAuthenticator:
       client_id: jupyterhub
-      # Get from keycloak client id credentials
-      client_secret: "7ZmyFu6KZ3xmFfnBOIzlKNyyNIInTI2v"
+
+      # Insert by helm set option
+      client_secret:
       
       oauth_callback_url: "https://jupyterhub.local/hub/oauth_callback"
       
@@ -52,7 +53,10 @@ singleuser:
     extraVolumes:
       - name: notebooks-directory
         hostPath:
-          path: notebooks
+        
+          # Insert by helm set option
+          path:
+
           type: DirectoryOrCreate
 
     extraVolumeMounts:
