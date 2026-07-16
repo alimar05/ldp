@@ -23,6 +23,11 @@ hub:
       # Бэкенд JupyterHub направляет сюда с полученным токеном, чтобы знать имя пользователя
       userdata_url: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/userinfo"
 
+      # Без него Keycloak не отдаст токен
+      scope:
+        - openid
+        - profile
+
       # Когда JupyterHub получает JSON с данными пользователя от userdata_url, там много полей: sub (уникальный ID), email, name, preferred_username и т.д.
       # JupyterHub нужно знать, какое именно поле использовать как имя пользователя для создания пода (jupyter-<имя>).
       # Как это работает: preferred_username — это стандартное, наиболее безопасное поле в Keycloak.
