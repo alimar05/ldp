@@ -1,3 +1,38 @@
+# hub relates to the hub pod, responsible for running JupyterHub, its configured
+# Authenticator class KubeSpawner, and its configured Proxy class
+# ConfigurableHTTPProxy. KubeSpawner creates the user pods, and
+# ConfigurableHTTPProxy speaks with the actual ConfigurableHTTPProxy server in
+# the proxy pod.
+hub:
+  revisionHistoryLimit:
+  config:
+    JupyterHub:
+      admin_access: true
+      authenticator_class: oauthenticator.generic.GenericOAuthenticator
+    GenericOAuthenticator:
+      client_id: jupyterhub
+      # Get from keycloak client id credentials
+      client_secret: "7ZmyFu6KZ3xmFfnBOIzlKNyyNIInTI2v"
+      
+      oauth_callback_url: "https://jupyterhub.local/hub/oauth_callback"
+      
+      # JupyterHub направляет сначала сюда из браузера
+      authorize_url: "https://keycloak.local/realms/master/protocol/openid-connect/auth"
+      # Бэкенд JupyterHub направляет сюда, чтобы обменять код на токен
+      token_url: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/token"
+      # Бэкенд JupyterHub направляет сюда с полученным токеном, чтобы знать имя пользователя
+      userdata_url: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/userinfo"
+
+      # Когда JupyterHub получает JSON с данными пользователя от userdata_url, там много полей: sub (уникальный ID), email, name, preferred_username и т.д.
+      # JupyterHub нужно знать, какое именно поле использовать как имя пользователя для создания пода (jupyter-<имя>).
+      # Как это работает: preferred_username — это стандартное, наиболее безопасное поле в Keycloak.
+      # Оно гарантированно содержит URL-безопасное имя (латиница, цифры, без пробелов), которое идеально подходит для именования Kubernetes-подов и Linux-пользователей внутри них.
+      username_key: preferred_username
+      # Зачем нужен: Это внутренняя политика безопасности самого JupyterHub, а не Keycloak.
+      # Как это работает: Даже если Keycloak успешно аутентифицировал пользователя и сказал "Да, это legit пользователь", JupyterHub по умолчанию очень параноидален. Он скажет: "Я не знаю этого пользователя, доступ запрещен", если он явно не прописан в списке allowed_users или не является admin.
+      # Параметр allow_all: true говорит JupyterHub: "Доверяй Keycloak. Если Keycloak пустил пользователя, создавай для него под и пускай в систему".
+      allow_all: true
+
 proxy:
   service:
     type: ClusterIP
