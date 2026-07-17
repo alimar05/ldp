@@ -82,31 +82,6 @@ redis:
       cpu: 10m
       memory: 64Mi
 
-## Installation & configuration of gitlab/gitlab-runner
-## See dependencies in Chart.yaml for current version
-gitlab-runner:
-  install: false
-  gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181
-  runners:
-    config: |
-      [[runners]]
-        url = "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181"
-        clone_url = "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181" 
-        [runners.kubernetes]
-        image = "ubuntu:22.04"
-        # "arm64" или "x86_64" зависит от платформы
-        helper_image = "registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:arm64-v18.6.3"
-        {{- if .Values.global.minio.enabled }}
-        [runners.cache]
-          Type = "s3"
-          Path = "gitlab-runner"
-          Shared = true
-          [runners.cache.s3]
-            ServerAddress = {{ include "gitlab-runner.cache-tpl.s3ServerAddress" . }}
-            BucketName = "runner-cache"
-            BucketLocation = "us-east-1"
-            Insecure = false
-        {{ end }}
 # Reduce replica counts, reducing CPU & memory requirements
 gitlab:
   gitlab-exporter:

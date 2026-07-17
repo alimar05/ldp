@@ -21,6 +21,34 @@ PATH_STYLE="true"
 ACCESS_KEY=$AWS_ACCESS_KEY_ID
 SECRET_KEY=$AWS_SECRET_ACCESS_KEY_ID
 V4_AUTH="true"
+# GitLab Runner
+cat << 'EOF' > values-gitlab-runner-override.yaml
+## Installation & configuration of gitlab/gitlab-runner
+## See dependencies in Chart.yaml for current version
+gitlab-runner:
+  install: true
+  gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181
+  runners:
+    config: |
+      [[runners]]
+        url = "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181"
+        clone_url = "http://gitlab-webservice-default.gitlab.svc.cluster.local:8181" 
+        [runners.kubernetes]
+        image = "ubuntu:22.04"
+        # "arm64" или "x86_64" зависит от платформы
+        helper_image = "registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:arm64-v18.6.3"
+        {{- if .Values.global.minio.enabled }}
+        [runners.cache]
+          Type = "s3"
+          Path = "gitlab-runner"
+          Shared = true
+          [runners.cache.s3]
+            ServerAddress = {{ include "gitlab-runner.cache-tpl.s3ServerAddress" . }}
+            BucketName = "runner-cache"
+            BucketLocation = "us-east-1"
+            Insecure = false
+        {{ end }}
+EOF
 
 
 # Прежде всего в postgresql должны быть созданы user и database
@@ -80,4 +108,3 @@ kubectl create secret generic gitlab-registry-storage -n ${NAMESPACE} \
     accesskey: ${AWS_ACCESS_KEY_ID}
     secretkey: ${AWS_SECRET_ACCESS_KEY_ID}" \
     --dry-run=client -o yaml | kubectl apply -f -
-
