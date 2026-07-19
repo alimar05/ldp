@@ -29,6 +29,10 @@
 
 Внутри каждого проекта содержится обязательный набор файлов:
 
+`keycloak-export-<название компонента>-client-settings.json` - хранит настройки `client` для keycloak. Импортируются через `clients > Import client`
+
+`keycloak-export-<название компонента>-client-authorization-settings.json` - хранит настройки `authorization` для keycloak. При необходимости активируются в блоке `Capability config` для `client` и импортируются во вкладке `Authorization` (файл создавать при необходимости)
+
 `configuring.sh` - хранит конфигурацию нужную для компонента перед установкой (файл создавать при необходимости)
 
 `install.sh` - установка компонента в кластер
@@ -63,11 +67,17 @@
 
     [nginx-ingress](utils/nginx-ingress/) - это reverse proxy для всего локального кластера k8s
 
-3) Установить необходимые для работы компопненты
+3) Установить [keycloak](keycloakx/install.sh) и импортировать настройки `keycloak-export-<название компонента>-client-settings.json` используемого компонента для `client`, дополнительно, **при необходимости**, активировать `Authorization` в блоке `Capability config` и импортировать во вкладке `Authorization` соотвествующие настройки `keycloak-export-<название компонента>-client-authorization-settings.json`
+
+4) Установить необходимые для работы компопненты
 
 ## Как добавить новый компонент
 1) Необходимо найти и скачать соответствующий helm chart проект
-2) Вынести кофигурацию и скрипты установки в соотвествующие файлы внутри проекта:
+2) Вынести настройки, кофигурацию и скрипты установки в соотвествующие файлы внутри проекта:
+
+    `keycloak-export-<название компонента>-client-settings.json`
+    
+    `keycloak-export-<название компонента>-client-authorization-settings.json` 
 
     `configuring.sh`
 
