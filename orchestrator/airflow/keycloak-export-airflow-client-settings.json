@@ -1,0 +1,82 @@
+{
+  "clientId": "airflow",
+  "name": "",
+  "description": "",
+  "rootUrl": "https://airflow.local/",
+  "adminUrl": "https://airflow.local/",
+  "baseUrl": "https://airflow.local/",
+  "surrogateAuthRequired": false,
+  "enabled": true,
+  "alwaysDisplayInConsole": false,
+  "clientAuthenticatorType": "client-secret",
+  "secret": "CZdirilsz0Y9XhV63DugIUGg9QlgsxJg",
+  "redirectUris": [
+    "https://airflow.local/*"
+  ],
+  "webOrigins": [
+    "https://airflow.local/"
+  ],
+  "notBefore": 0,
+  "bearerOnly": false,
+  "consentRequired": false,
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": false,
+  "directAccessGrantsEnabled": false,
+  "serviceAccountsEnabled": true,
+  "authorizationServicesEnabled": true,
+  "publicClient": false,
+  "frontchannelLogout": true,
+  "protocol": "openid-connect",
+  "attributes": {
+    "oauth2.jwt.authorization.grant.enabled": "false",
+    "post.logout.redirect.uris": "https://airflow.local/*",
+    "frontchannel.logout.session.required": "true",
+    "oauth2.device.authorization.grant.enabled": "false",
+    "use.jwks.url": "false",
+    "backchannel.logout.revoke.offline.tokens": "false",
+    "use.refresh.tokens": "true",
+    "realm_client": "false",
+    "oidc.ciba.grant.enabled": "false",
+    "backchannel.logout.session.required": "true",
+    "client_credentials.use_refresh_token": "false",
+    "require.pushed.authorization.requests": "false",
+    "dpop.bound.access.tokens": "false",
+    "logout.confirmation.enabled": "false",
+    "id.token.as.detached.signature": "false",
+    "client.secret.creation.time": "1783860034",
+    "client.introspection.response.allow.jwt.claim.enabled": "false",
+    "standard.token.exchange.enabled": "false",
+    "frontchannel.logout.url": "https://airflow.local/",
+    "client.use.lightweight.access.token.enabled": "false",
+    "request.object.required": "not required",
+    "access.token.header.type.rfc9068": "false",
+    "tls.client.certificate.bound.access.tokens": "false",
+    "acr.loa.map": "{}",
+    "display.on.consent.screen": "false",
+    "token.response.type.bearer.lower-case": "false"
+  },
+  "authenticationFlowBindingOverrides": {},
+  "fullScopeAllowed": false,
+  "nodeReRegistrationTimeout": -1,
+  "defaultClientScopes": [
+    "web-origins",
+    "service_account",
+    "acr",
+    "roles",
+    "profile",
+    "basic",
+    "email"
+  ],
+  "optionalClientScopes": [
+    "address",
+    "phone",
+    "offline_access",
+    "organization",
+    "microprofile-jwt"
+  ],
+  "access": {
+    "view": true,
+    "configure": true,
+    "manage": true
+  }
+}
