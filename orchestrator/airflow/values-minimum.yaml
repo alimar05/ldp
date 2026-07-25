@@ -36,6 +36,10 @@ databaseCleanup:
 workers:
   # Resource configuration for Airflow Celery workers and pods created with pod-template-file
   <<: *resources-template
+  persistence:
+    # Volume size for Airflow Celery worker StatefulSet
+    # (deprecated, use `workers.celery.persistence.size` instead)
+    size: 10Gi
 
 scheduler:
   <<: *resources-template
@@ -54,6 +58,9 @@ webserver:
 
 triggerer:
   <<: *resources-template
+  persistence:
+    # Volume size for triggerer StatefulSet
+    size: 10Gi
 
 secret:
   - envName: "AIRFLOW_CONN_GITLAB" 
