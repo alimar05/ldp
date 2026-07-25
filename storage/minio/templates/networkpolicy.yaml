@@ -1,4 +1,4 @@
-{{- if .Values.networkPolicy.enabled }}
+{{- if and (.Values.networkPolicy.enabled) (eq .Values.networkPolicy.flavor "kubernetes") }}
 kind: NetworkPolicy
 apiVersion: {{ template "minio.networkPolicy.apiVersion" . }}
 metadata:
@@ -15,7 +15,8 @@ spec:
       release: {{ .Release.Name }}
   ingress:
     - ports:
-        - port: {{ .Values.service.port }}
+        - port: {{ .Values.minioAPIPort }}
+        - port: {{ .Values.minioConsolePort }}
       {{- if not .Values.networkPolicy.allowExternal }}
       from:
         - podSelector:
