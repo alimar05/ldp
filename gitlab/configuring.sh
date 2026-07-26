@@ -26,7 +26,7 @@ cat << 'EOF' > values-gitlab-runner-override.yaml
 ## Installation & configuration of gitlab/gitlab-runner
 ## See dependencies in Chart.yaml for current version
 gitlab-runner:
-  install: true
+  install: false
   gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181
   runners:
     config: |
@@ -49,7 +49,26 @@ gitlab-runner:
             Insecure = false
         {{ end }}
 EOF
-
+# Gitlab keycloak oidc
+cat << 'EOF' > values-gitlab-keycloak-override.yaml
+name: "openid_connect"
+label: "SSO"
+args:
+  client_options:
+    identifier: "gitlab"
+    secret: "Yztbr7ZwqSIf8Twf34JrC3t1NA0Z50Bt"
+    redirect_uri: "https://gitlab.local/users/auth/openid_connect/callback"
+    authorization_endpoint: "https://keycloak.local/realms/master/protocol/openid-connect/auth"
+    token_endpoint: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/token"
+    userinfo_endpoint: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/userinfo"
+    jwks_uri: http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/certs
+  discovery: false
+  issuer: "https://keycloak.local/realms/master"
+  scope: ["openid", "profile", "email"]
+EOF
+kubectl create secret generic gitlab-keycloak -n ${NAMESPACE} \
+    --from-file=provider=values-gitlab-keycloak-override.yaml \
+    --dry-run=client -o yaml | kubectl apply -f -
 
 # Прежде всего в postgresql должны быть созданы user и database
 kubectl run -it -n ${NAMESPACE} --rm psql \

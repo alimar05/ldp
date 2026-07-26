@@ -1,7 +1,7 @@
 ## Installation & configuration of gitlab/gitlab-runner
 ## See dependencies in Chart.yaml for current version
 gitlab-runner:
-  install: true
+  install: false
   gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181
   runners:
     config: |

@@ -41,6 +41,13 @@ global:
       bucket: gitlab-packages-storage
     uploads:
       bucket: gitlab-uploads-storage
+    omniauth:
+      enabled: true
+      allowSingleSignOn: ["openid_connect"]
+      blockAutoCreatedUsers: false
+      autoLinkUserFromProvider: ["openid_connect"]
+      providers:
+        - secret: gitlab-keycloak
   registry:
     bucket: gitlab-registry-storage
 

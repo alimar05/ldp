@@ -67,7 +67,7 @@
 
     [nginx-ingress](utils/nginx-ingress/) - это reverse proxy для всего локального кластера k8s
 
-3) Установить [keycloak](keycloakx/install.sh) и импортировать настройки `keycloak-export-<название компонента>-client-settings.json` используемого компонента для `client`, дополнительно, **при необходимости**, активировать `Authorization` в блоке `Capability config` и импортировать во вкладке `Authorization` соотвествующие настройки `keycloak-export-<название компонента>-client-authorization-settings.json`
+3) Установить [keycloak](keycloakx/install.sh) и импортировать настройки `keycloak-export-<название компонента>-client-settings.json` используемого компонента для `client`, дополнительно, **при необходимости**, активировать `Authorization` в блоке `Capability config` и импортировать во вкладке `Authorization` соотвествующие настройки `keycloak-export-<название компонента>-client-authorization-settings.json`. Для пользователя admin задать email `admin@example.com` и выставить `Email verified: On`
 
 4) Установить необходимые для работы компопненты
 
