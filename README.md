@@ -91,7 +91,7 @@
 
 3) Если требуется доступ извне локального кластера, необходимо для [setup-tls.sh](utils/certs/setup-tls.sh) добавить в переменную
     ```
-    DOMAINS=("airflow.local" "flower.local" "gitlab.local" "minio.local" "vault.local" "nessie.local" "jupyterhub.local" "keycloak.local")
+    DOMAINS=("airflow.local" "flower.local" "gitlab.local" "console.minio.local" "vault.local" "nessie.local" "jupyterhub.local" "keycloak.local")
     ```
     новый домен и добавить в переменную
     ```
