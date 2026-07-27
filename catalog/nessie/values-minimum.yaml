@@ -1,3 +1,10 @@
+# -- Which type of version store to use: IN_MEMORY, ROCKSDB, DYNAMODB2, MONGODB2, CASSANDRA2, JDBC2, BIGTABLE.
+# Note: the version store type JDBC is deprecated, please use the Nessie Server Admin Tool to migrate to JDBC2.
+# Note: the version store type CASSANDRA is deprecated, please use the Nessie Server Admin Tool to migrate to CASSANDRA2.
+# Note: the version store type DYNAMODB is deprecated, please use the Nessie Server Admin Tool to migrate to DYNAMODB2.
+# Note: the version store type MONGODB is deprecated, please use the Nessie Server Admin Tool to migrate to MONGODB2.
+versionStoreType: JDBC2
+
 # JDBC datasource settings. Only required when using JDBC version store type; ignored otherwise.
 jdbc:
   # -- The JDBC connection string. If you are using Nessie OSS images, then only
@@ -31,7 +38,7 @@ catalog:
     # see below.
     configDefaults:
       table-default.write.format.default: parquet
-      table-default.write.parquet.compression-codec: zstd
+      # table-default.write.parquet.compression-codec: zstd
 
     # -- Iceberg config overrides applicable to all clients and warehouses. Any properties that are
     # common to all iceberg clients should be included here. They will be passed to all clients on
@@ -40,7 +47,7 @@ catalog:
     configOverrides:
       table-override.gc.enabled: true
       table-default.write.wap.enabled: true
-      table-override.write.object-storage.enabled: true
+      table-override.write.object-storage.enabled: false
 
     # -- Iceberg warehouses. Each warehouse is a location where Iceberg tables are stored. Each
     # warehouse has a name, a location, and optional config defaults and overrides. At least one
@@ -104,7 +111,6 @@ catalog:
           roleArn: "arn:aws:iam::123456789012:role/role-name"
           # -- The IAM policy in JSON format to be used as an inline session policy when calling the
           # assume-role endpoint. Optional.
-          # "{ \"Version\": \"2012-10-17\", \"Statement\": [ { \"Effect\": \"Allow\", \"Action\": \"s3:*\", \"Resource\": \"*\" } ] }"
           policy: |
               {
                   "Version": "2012-10-17",
