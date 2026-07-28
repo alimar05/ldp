@@ -10,6 +10,8 @@ DATABASE="nessie"
 ACCESS_KEY_ID="AKIAIOSFODNM7EXAMPLE"
 SECRET_ACCESS_KEY_ID="wJalrXUtnFEMI/K7MDENG/bRxRfiCYEXAMPLEKE"
 ENDPOINT="http://minio.minio.svc.cluster.local:9000"
+# Keycloak
+CLIENT_SECRET="TgmfMBKgTp3SJFN0qZko6FjxqBOdKhYf"
 
 
 kubectl create secret generic postgresql-secret -n ${NAMESPACE} \
@@ -39,3 +41,7 @@ kubectl run -it -n ${NAMESPACE} --rm minio-cli \
   --command -- /bin/sh -c "\
     mc alias set obs ${ENDPOINT} ${ACCESS_KEY_ID} '${SECRET_ACCESS_KEY_ID}' \
     && mc mb --ignore-existing obs/iceberg"
+
+kubectl create secret generic nessie-ui-oidc-creds -n ${NAMESPACE} \
+    --from-literal=client-secret="${CLIENT_SECRET}" \
+    --dry-run=client -o yaml | kubectl apply -f -
