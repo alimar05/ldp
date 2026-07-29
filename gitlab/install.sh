@@ -2,4 +2,4 @@
 
 source configuring.sh
 
-helm install gitlab . -n gitlab -f values-minimum.yaml -f values-gitlab-runner-override.yaml
+helm install gitlab gitlab -n gitlab -f values-minimum.yaml -f values-gitlab-runner-override.yaml

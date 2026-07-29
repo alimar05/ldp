@@ -163,8 +163,8 @@ advancedConfig:
   quarkus.oidc.ui-app.jwks-path: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/certs"
   quarkus.oidc.ui-app.token.issuer: "https://keycloak.local/realms/master"
 
-  # DEBUG logs
-  quarkus.log.category."io.quarkus.oidc".level: DEBUG
+  # # DEBUG logs
+  # quarkus.log.category."io.quarkus.oidc".level: DEBUG
 
   # Хранить в куке только ID и Refresh токены (резко уменьшает размер куки, избегая chunking)
   quarkus.oidc.ui-app.token-state-manager.strategy: "id-refresh-tokens"

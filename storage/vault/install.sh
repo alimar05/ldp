@@ -2,4 +2,4 @@
 
 source configuring.sh
 
-helm install vault . -n vault -f values-minimum.yaml
+helm install vault vault -n vault -f values-minimum.yaml

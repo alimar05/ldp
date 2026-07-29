@@ -2,4 +2,4 @@
 
 source configuring.sh
 
-helm upgrade --install --rollback-on-failure --wait minio . -n minio -f values-minimum.yaml
+helm upgrade --install --rollback-on-failure --wait minio minio -n minio -f values-minimum.yaml

@@ -2,4 +2,4 @@
 
 source configuring.sh
 
-helm install keycloak . -n keycloak -f values-minimum.yaml
+helm install keycloak keycloakx -n keycloak -f values-minimum.yaml

@@ -2,4 +2,4 @@
 
 source configuring.sh
 
-helm install minio . -n minio -f values-minimum.yaml
+helm install minio minio -n minio -f values-minimum.yaml

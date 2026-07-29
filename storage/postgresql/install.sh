@@ -2,4 +2,4 @@
 
 source configuring.sh
 
-helm install postgresql . -n postgresql -f values-minimum.yaml
+helm install postgresql postgresql -n postgresql -f values-minimum.yaml

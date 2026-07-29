@@ -2,4 +2,4 @@
 
 source configuring.sh
 
-helm upgrade --install --rollback-on-failure --wait gitlab . -n gitlab -f values-minimum.yaml
+helm upgrade --install --rollback-on-failure --wait gitlab gitlab -n gitlab -f values-minimum.yaml
