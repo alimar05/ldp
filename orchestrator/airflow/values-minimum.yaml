@@ -90,6 +90,11 @@ redis:
 postgresql:
   enabled: false
 
+# Airflow create user job settings
+createUserJob:
+  # Whether the create user job should be created
+  enabled: false
+
 config:
   secrets:
     backend: airflow.providers.hashicorp.secrets.vault.VaultBackend
