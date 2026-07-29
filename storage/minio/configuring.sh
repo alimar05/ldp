@@ -16,7 +16,11 @@ COREDNS_CM="coredns"
 # MinIO (изнутри пода) пытается сделать POST-запрос на https://keycloak.local
 # Провал: под MinIO не может резолвить keycloak.local → i/o timeout
 # Поэтому нужно добавить в NodeHosts (в ConfigMap coredns):
-# 192.168.194.159 keycloak.local, где 192.168.194.159 есть CLUSTER_IP nginx-ingress-controller
+# 192.168.194.159 keycloak.local, где 192.168.194.159 есть актуальный CLUSTER_IP для nginx-ingress-controller
+INGRESS_SVC="nginx-ingress-controller"
+INGRESS_NS="nginx-ingress"
+COREDNS_CM="coredns"
+COREDNS_NS="kube-system"
 
 # 1. Получаем CLUSTER_IP Ingress Controller'а
 echo "🔍 Получение CLUSTER_IP для $INGRESS_SVC..."
@@ -27,38 +31,50 @@ if [ -z "$CLUSTER_IP" ]; then
 fi
 echo "✅ CLUSTER_IP найден: $CLUSTER_IP"
 
-# 2. Обновляем NodeHosts в ConfigMap coredns
+# 2. Формируем новую запись
 ENTRY="$CLUSTER_IP keycloak.local"
-echo "📝 Проверка записи в NodeHosts..."
+echo "📝 Проверка и обновление записи в NodeHosts..."
 
 # 3. Получаем текущее содержимое NodeHosts
 CURRENT_HOSTS=$(kubectl get configmap "$COREDNS_CM" -n "$COREDNS_NS" -o jsonpath='{.data.NodeHosts}')
 
-if echo "$CURRENT_HOSTS" | grep -qF "$ENTRY"; then
-    echo "✅ Запись '$ENTRY' уже существует в NodeHosts. Пропускаем обновление."
+# 4. Умная замена через awk (работает одинаково на macOS и Linux)
+# Логика: если строка заканчивается на 'keycloak.local', заменяем её. Иначе добавляем в конец.
+NEW_HOSTS=$(echo "$CURRENT_HOSTS" | awk -v entry="$ENTRY" '
+BEGIN { found=0 }
+/keycloak\.local[[:space:]]*$/ { 
+    print entry; 
+    found=1; 
+    next 
+}
+{ print }
+END { 
+    if (!found && entry != "") print entry 
+}')
+
+# 5. Проверяем, изменилось ли содержимое (чтобы не перезапускать CoreDNS зря)
+if [ "$CURRENT_HOSTS" = "$NEW_HOSTS" ]; then
+    echo "✅ Запись уже актуальна ($ENTRY). Пропускаем обновление ConfigMap."
 else
-    echo "⚙️ Добавляем запись '$ENTRY' в NodeHosts..."
+    echo "⚙️ Обновляем NodeHosts (заменяем старую запись или добавляем новую)..."
     
-    # Формируем новое содержимое (добавляем перенос строки и новую запись)
-    NEW_HOSTS="${CURRENT_HOSTS}"$'\n'"${ENTRY}"
-    
-    # Экранируем переносы строк для JSON patch
-    ESCAPED_HOSTS=$(echo "$NEW_HOSTS" | awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
+    # БЕЗОПАСНОЕ экранирование переносов строк для JSON (без sed, работает везде!)
+    # Первая строка печатается как есть, все последующие начинаются с \n
+    ESCAPED_HOSTS=$(printf '%s' "$NEW_HOSTS" | awk 'NR==1{printf "%s", $0; next} {printf "\\n%s", $0}')
     
     # Применяем патч
     kubectl patch configmap "$COREDNS_CM" -n "$COREDNS_NS" --type merge \
         -p "{\"data\":{\"NodeHosts\":\"$ESCAPED_HOSTS\"}}"
     
-    echo "✅ ConfigMap обновлен."
+    echo "✅ ConfigMap успешно обновлен."
     
-    # 3. Перезапускаем CoreDNS для применения изменений
+    # 6. Перезапускаем CoreDNS для применения изменений
     echo "🔄 Перезапуск CoreDNS..."
-    # Пробуем найти deployment с именем coredns или kube-dns (зависит от версии k8s/orbstack)
-    DEPLOYMENT_NAME=$(kubectl get deployments -n "$COREDNS_NS" -o jsonpath='{.items[?(@.metadata.labels.k8s-app=="kube-dns")].metadata.name}' || echo "coredns")
+    DEPLOYMENT_NAME=$(kubectl get deployments -n "$COREDNS_NS" -o jsonpath='{.items[?(@.metadata.labels.k8s-app=="kube-dns")].metadata.name}' 2>/dev/null || echo "coredns")
     
     kubectl rollout restart deployment "$DEPLOYMENT_NAME" -n "$COREDNS_NS"
     kubectl rollout status deployment "$DEPLOYMENT_NAME" -n "$COREDNS_NS" --timeout=60s
-    echo "✅ CoreDNS перезапущен."
+    echo "✅ CoreDNS перезапущен и готов."
 fi
 
 
