@@ -4,7 +4,6 @@
 # ConfigurableHTTPProxy speaks with the actual ConfigurableHTTPProxy server in
 # the proxy pod.
 hub:
-  revisionHistoryLimit:
   config:
     JupyterHub:
       admin_access: true
@@ -66,6 +65,7 @@ singleuser:
     name: quay.io/jupyter/pyspark-notebook
     # Данная версия более универсальна linux/amd64 and linux/arm64/v8
     tag: java-17.0.8.1
+    pullPolicy: IfNotPresent
   cmd: null
 
 

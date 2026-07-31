@@ -5,6 +5,7 @@ image:
   registry: docker.io
   repository: bitnamilegacy/postgresql
   tag: 16.1.0-debian-11-r25
+  pullPolicy: IfNotPresent
 
 ## PostgreSQL user (has superuser privileges if username is `postgres`)
 ## ref: https://github.com/bitnami/bitnami-docker-postgresql/blob/master/README.md#setting-the-root-password-on-first-run
