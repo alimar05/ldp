@@ -88,7 +88,7 @@ runtimeClassName: ""
 
 ## Set default rootUser, rootPassword
 ## rootUser and rootPassword is generated when not set
-## Distributed MinIO ref: https://min.io/docs/minio/linux/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html
+## Distributed MinIO ref: https://docs.min.io/community/minio-object-store/operations/install-deploy-manage/deploy-minio-multi-node-multi-drive.html
 ##
 rootUser: ""
 rootPassword: ""
@@ -132,7 +132,7 @@ tls:
   publicCrt: public.crt
   privateKey: private.key
 
-## Trusted Certificates Settings for MinIO. Ref: https://min.io/docs/minio/linux/operations/network-encryption.html#third-party-certificate-authorities
+## Trusted Certificates Settings for MinIO. Ref: https://docs.min.io/community/minio-object-store/operations/network-encryption.html#third-party-certificate-authorities
 ## Bundle multiple trusted certificates into one secret and pass that here. Ref: https://github.com/minio/minio/tree/master/docs/tls/kubernetes#2-create-kubernetes-secret
 ## When using self-signed certificates, remember to include MinIO's own certificate in the bundle with key public.crt.
 ## If certSecret is left empty and tls is enabled, this chart installs the public certificate from .Values.tls.certSecret.
@@ -200,9 +200,11 @@ service:
 ingress:
   enabled: false
   ingressClassName: ~
-  labels: {}
+  labels:
+    {}
     # node-role.kubernetes.io/ingress: platform
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     # kubernetes.io/ingress.allow-http: "false"
@@ -241,9 +243,11 @@ consoleService:
 consoleIngress:
   enabled: false
   ingressClassName: ~
-  labels: {}
+  labels:
+    {}
     # node-role.kubernetes.io/ingress: platform
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
     # kubernetes.io/ingress.allow-http: "false"
@@ -365,7 +369,7 @@ makePolicyJob:
 users:
   ## Username, password and policy to be assigned to the user
   ## Default policies are [readonly|readwrite|writeonly|consoleAdmin|diagnostics]
-  ## Add new policies as explained here https://min.io/docs/minio/kubernetes/upstream/administration/identity-access-management.html#access-management
+  ## Add new policies as explained here https://docs.min.io/community/minio-object-store/administration/identity-access-management.html#access-management
   ## NOTE: this will fail if LDAP is enabled in your MinIO deployment
   ## make sure to disable this if you are using LDAP.
   - accessKey: console
@@ -391,9 +395,10 @@ makeUserJob:
 
 ## List of service accounts to be created after minio install
 ##
-svcaccts: []
+svcaccts:
+  []
   ## accessKey, secretKey and parent user to be assigned to the service accounts
-  ## Add new service accounts as explained here https://min.io/docs/minio/kubernetes/upstream/administration/identity-access-management/minio-user-management.html#service-accounts
+  ## Add new service accounts as explained here https://docs.min.io/community/minio-object-store/administration/identity-access-management/minio-user-management.html#access-keys
   # - accessKey: console-svcacct
   #   secretKey: console123
   #   user: console
@@ -430,7 +435,8 @@ makeServiceAccountJob:
 
 ## List of buckets to be created after minio install
 ##
-buckets: []
+buckets:
+  []
   #   # Name of the bucket
   # - name: bucket1
   #   # Policy to be set on the
@@ -479,13 +485,15 @@ customCommandJob:
     requests:
       memory: 128Mi
   ## Additional volumes to add to the post-job.
-  extraVolumes: []
+  extraVolumes:
+    []
     # - name: extra-policies
     #   configMap:
     #     name: my-extra-policies-cm
   ## Additional volumeMounts to add to the custom commands container when
   ## running the post-job.
-  extraVolumeMounts: []
+  extraVolumeMounts:
+    []
     # - name: extra-policies
     #   mountPath: /mnt/extras/
   # Command to run after the main command on exit
@@ -507,7 +515,7 @@ postJob:
 ## Use this field to add environment variables relevant to MinIO server. These fields will be passed on to MinIO container(s)
 ## when Chart is deployed
 environment:
-  ## Please refer for comprehensive list https://min.io/docs/minio/linux/reference/minio-server/minio-server.html
+  ## Please refer for comprehensive list https://docs.min.io/community/minio-object-store/reference/minio-server/minio-server.html
   ## MINIO_SUBNET_LICENSE: "License key obtained from https://subnet.min.io"
   ## MINIO_BROWSER: "off"
 
@@ -519,7 +527,7 @@ extraSecret: ~
 
 ## OpenID Identity Management
 ## The following section documents environment variables for enabling external identity management using an OpenID Connect (OIDC)-compatible provider.
-## See https://min.io/docs/minio/linux/operations/external-iam/configure-openid-external-identity-management.html for a tutorial on using these variables.
+## See https://docs.min.io/community/minio-object-store/operations/external-iam/configure-openid-external-identity-management.html for a tutorial on using these variables.
 oidc:
   enabled: false
   configUrl: "https://identity-provider-url/.well-known/openid-configuration"
@@ -542,10 +550,35 @@ networkPolicy:
   # Specifies whether the policies created will be standard Network Policies (flavor: kubernetes)
   # or Cilium Network Policies (flavor: cilium)
   flavor: kubernetes
+  # allows external access to the minio api
   allowExternal: true
+  ## @params networkPolicy.egress configuration of the egress traffic
+  egress:
+    ## @param networkPolicy.egress.enabled When enabled, an egress network policy will be
+    ## created allowing minio to connect to external data sources from kubernetes cluster.
+    ##
+    enabled: false
+    ## @param networkPolicy.egress.ports Add individual ports to be allowed by the egress
+    ## Add ports to the egress by specifying - port: <port number>
+    ## E.X.
+    ## - port: 80
+    ## - port: 443
+    ## - port: 53
+    ##   protocol: UDP
+    ##
+    ports: []
+    ## @param networkPolicy.egress.to Allow egress traffic to specific destinations
+    ## Add destinations to the egress by specifying - ipBlock: <CIDR>
+    ## E.X.
+    ## to:
+    ##  - namespaceSelector:
+    ##    matchExpressions:
+    ##    - {key: role, operator: In, values: [minio]}
+    ##
+    to: []
   # only when using flavor: cilium
   egressEntities:
-   - kube-apiserver
+    - kube-apiserver
 
 ## PodDisruptionBudget settings
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
@@ -573,7 +606,8 @@ metrics:
     # for node metrics
     relabelConfigs: {}
     # for cluster metrics
-    relabelConfigsCluster: {}
+    relabelConfigsCluster:
+      {}
       # metricRelabelings:
       #   - regex: (server|pod)
       #     action: labeldrop

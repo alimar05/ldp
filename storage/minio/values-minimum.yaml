@@ -1,3 +1,10 @@
+image:
+  repository: quay.io/minio/minio
+  # Исправлена совместимость с AWS SDK v2
+  # tag: "RELEASE.2025-02-03T21-03-04Z"
+  tag: "RELEASE.2025-04-22T22-12-26Z"
+  pullPolicy: IfNotPresent
+
 ## minio mode, i.e. standalone or distributed
 mode: standalone ## other supported values are "standalone"
 
