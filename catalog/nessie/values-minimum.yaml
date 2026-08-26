@@ -105,10 +105,6 @@ catalog:
           # credentials down to the client, for each table that is created, updated or registered.
           # Vended credentials are not cached server-side.
           enabled: true
-          # -- The ARN of the role to assume for accessing S3 data. This parameter is required for
-          # Amazon S3, but may not be required for other storage providers (e.g. Minio does not use it
-          # at all).
-          roleArn: "arn:aws:iam::123456789012:role/role-name"
           # -- The IAM policy in JSON format to be used as an inline session policy when calling the
           # assume-role endpoint. Optional.
           policy: |
@@ -117,7 +113,7 @@ catalog:
                   "Statement": [
                     {
                       "Effect": "Allow",
-                      "Action": ["s3:GetObject", "s3:PutObject", "s3:ListBucket"],
+                      "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket"],
                       "Resource": ["arn:aws:s3:::iceberg", "arn:aws:s3:::iceberg/*"]
                   }
                 ]
