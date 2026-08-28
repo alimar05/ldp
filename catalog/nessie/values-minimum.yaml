@@ -38,6 +38,8 @@ catalog:
     # see below.
     configDefaults:
       table-default.write.format.default: parquet
+      table-default.write.metadata.delete-after-commit.enabled: "true"
+      table-default.write.metadata.previous-versions-max: "0"
       # table-default.write.parquet.compression-codec: zstd
 
     # -- Iceberg config overrides applicable to all clients and warehouses. Any properties that are
