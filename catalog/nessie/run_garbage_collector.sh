@@ -43,6 +43,9 @@ kubectl run -it -n "${NAMESPACE}" --rm nessie-gc-schema-initializer \
   --jdbc-password ${PASSWORD}"
 
 # Запуск очистки Garbage Collection с cutoff
+# Удаляет устаревший metadata.json. После чего DROP TABLE PURGE ничего не оставляет в s3.
+# Т. е. для полного удаления таблицы нужно сначала запустить эту команду, затем DROP TABLE PURGE, иначе в логах does not exist, probably already deleted, assuming no files
+# --max-file-modification должен быть больше даты создания файла metadata.json
 kubectl run -it -n "${NAMESPACE}" --rm nessie-garbage-collector \
   --image="ghcr.io/projectnessie/nessie-gc:${DOCKER_IMAGE_TAG}" \
   --restart=Never \
