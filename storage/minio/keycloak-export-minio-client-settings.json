@@ -2,8 +2,8 @@
   "clientId": "minio",
   "name": "",
   "description": "",
-  "rootUrl": "https://console.minio.local",
-  "adminUrl": "https://console.minio.local",
+  "rootUrl": "https://console.minio.local.me",
+  "adminUrl": "https://console.minio.local.me",
   "baseUrl": "",
   "surrogateAuthRequired": false,
   "enabled": true,
@@ -11,7 +11,7 @@
   "clientAuthenticatorType": "client-secret",
   "secret": "56CtYjbL52cwzFCwFSbFGSlC0GrPsdCr",
   "redirectUris": [
-    "https://console.minio.local/oauth_callback"
+    "https://console.minio.local.me/oauth_callback"
   ],
   "webOrigins": [
     ""
@@ -31,8 +31,8 @@
     "client.secret.creation.time": "1784884542",
     "standard.token.exchange.enabled": "false",
     "oauth2.jwt.authorization.grant.enabled": "false",
-    "post.logout.redirect.uris": "https://console.minio.local",
     "frontchannel.logout.session.required": "true",
+    "post.logout.redirect.uris": "https://console.minio.local.me",
     "oauth2.device.authorization.grant.enabled": "false",
     "backchannel.logout.revoke.offline.tokens": "false",
     "realm_client": "false",

@@ -11,10 +11,10 @@
   "clientAuthenticatorType": "client-secret",
   "secret": "TgmfMBKgTp3SJFN0qZko6FjxqBOdKhYf",
   "redirectUris": [
-    "https://nessie.local/"
+    "https://nessie.local.me/"
   ],
   "webOrigins": [
-    "https://nessie.local/"
+    "https://nessie.local.me/"
   ],
   "notBefore": 0,
   "bearerOnly": false,
@@ -28,12 +28,15 @@
   "protocol": "openid-connect",
   "attributes": {
     "realm_client": "false",
+    "logout.confirmation.enabled": "false",
     "oidc.ciba.grant.enabled": "false",
     "client.secret.creation.time": "1785233339",
     "backchannel.logout.session.required": "true",
     "standard.token.exchange.enabled": "false",
     "oauth2.jwt.authorization.grant.enabled": "false",
+    "frontchannel.logout.session.required": "true",
     "oauth2.device.authorization.grant.enabled": "false",
+    "display.on.consent.screen": "false",
     "backchannel.logout.revoke.offline.tokens": "false",
     "dpop.bound.access.tokens": "false"
   },

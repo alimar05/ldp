@@ -6,16 +6,16 @@ args:
 # Additional environment variables for Keycloak
 extraEnv: |
   - name: KC_HOSTNAME
-    value: "https://keycloak.local"
+    value: "https://keycloak.local.me"
   
   - name: KC_HOSTNAME_BROWSER
-    value: "https://keycloak.local"
+    value: "https://keycloak.local.me"
   
   - name: KC_HOSTNAME_BACKCHANNEL
-    value: "https://keycloak.local"
+    value: "https://keycloak.local.me"
   
   - name: KC_HOSTNAME_ADMIN
-    value: "https://keycloak.local"
+    value: "https://keycloak.local.me"
   
   - name: KC_HOSTNAME_STRICT
     value: "false"
@@ -49,7 +49,7 @@ ingress:
   rules:
     -
       # Ingress host
-      host: keycloak.local
+      host: keycloak.local.me
       # Paths for the host
       paths:
         - path: /
@@ -57,7 +57,7 @@ ingress:
   # TLS configuration
   tls:
    - hosts:
-       - keycloak.local
+       - keycloak.local.me
      secretName: wildcard-local-tls
 
 database:

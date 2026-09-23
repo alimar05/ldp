@@ -147,7 +147,7 @@ advancedConfig:
   quarkus.http.proxy.enable-forwarded-prefix: true
 
   # https://projectnessie.org/nessie-0-107-5/authentication/#openid-bearer-tokens
-  quarkus.oidc.ui-app.auth-server-url: "https://keycloak.local/realms/master"
+  quarkus.oidc.ui-app.auth-server-url: "https://keycloak.local.me/realms/master"
   quarkus.oidc.ui-app.client-id: "nessie-ui"
   quarkus.oidc.ui-app.credentials.secret:
   quarkus.oidc.ui-app.application-type: "web-app"
@@ -157,9 +157,9 @@ advancedConfig:
   # Quarkus будет использовать их вместо тех, что в .well-known/openid-configuration
   quarkus.oidc.ui-app.discovery-enabled: false
   quarkus.oidc.ui-app.token-path: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/token"
-  quarkus.oidc.ui-app.authorization-path: "https://keycloak.local/realms/master/protocol/openid-connect/auth"
+  quarkus.oidc.ui-app.authorization-path: "https://keycloak.local.me/realms/master/protocol/openid-connect/auth"
   quarkus.oidc.ui-app.jwks-path: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/certs"
-  quarkus.oidc.ui-app.token.issuer: "https://keycloak.local/realms/master"
+  quarkus.oidc.ui-app.token.issuer: "https://keycloak.local.me/realms/master"
 
   # # DEBUG logs
   # quarkus.log.category."io.quarkus.oidc".level: DEBUG
@@ -207,14 +207,14 @@ ingress:
   pathType: Prefix
   # -- A list of host paths used to configure the ingress.
   hosts:
-    - host: nessie.local
+    - host: nessie.local.me
       paths:
         - /
   # -- A list of TLS certificates; each entry has a list of hosts in the certificate,
   # along with the secret name used to terminate TLS traffic on port 443.
   tls:
    - hosts:
-      - nessie.local
+      - nessie.local.me
      secretName: wildcard-local-tls
 
 # -- Configures the resources requests and limits for nessie pods.

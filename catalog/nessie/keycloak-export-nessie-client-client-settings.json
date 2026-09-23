@@ -11,10 +11,10 @@
   "clientAuthenticatorType": "client-secret",
   "secret": "ivalQbEbsHk0VTZlkti6nfYUA4FmVbyC",
   "redirectUris": [
-    "https://nessie.local/"
+    "https://nessie.local.me/"
   ],
   "webOrigins": [
-    "https://nessie.local/"
+    "https://nessie.local.me/"
   ],
   "notBefore": 0,
   "bearerOnly": false,
@@ -50,11 +50,7 @@
     "acr.loa.map": "{}",
     "display.on.consent.screen": "false",
     "token.response.type.bearer.lower-case": "false",
-    "dpop.bound.access.tokens": "false",
-    "post.logout.redirect.uris": "",
-    "login_theme": "",
-    "consent.screen.text": "",
-    "frontchannel.logout.url": ""
+    "dpop.bound.access.tokens": "false"
   },
   "authenticationFlowBindingOverrides": {},
   "fullScopeAllowed": true,
@@ -80,6 +76,5 @@
     "view": true,
     "configure": true,
     "manage": true
-  },
-  "authorizationServicesEnabled": false
+  }
 }

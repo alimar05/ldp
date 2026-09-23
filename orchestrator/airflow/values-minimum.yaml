@@ -12,7 +12,7 @@ ingress:
   apiServer:
     enabled: true
     hosts:
-      - name: airflow.local
+      - name: airflow.local.me
         tls:
           enabled: true
           secretName: wildcard-local-tls
@@ -20,7 +20,7 @@ ingress:
   flower:
     enabled: true
     hosts:
-      - name: flower.local
+      - name: flower.local.me
         tls:
           enabled: true
           secretName: wildcard-local-tls

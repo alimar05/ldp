@@ -14,10 +14,10 @@ hub:
       # Insert by helm set option
       client_secret:
       
-      oauth_callback_url: "https://jupyterhub.local/hub/oauth_callback"
+      oauth_callback_url: "https://jupyterhub.local.me/hub/oauth_callback"
       
       # JupyterHub направляет сначала сюда из браузера
-      authorize_url: "https://keycloak.local/realms/master/protocol/openid-connect/auth"
+      authorize_url: "https://keycloak.local.me/realms/master/protocol/openid-connect/auth"
       # Бэкенд JupyterHub направляет сюда, чтобы обменять код на токен
       token_url: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/token"
       # Бэкенд JupyterHub направляет сюда с полученным токеном, чтобы знать имя пользователя
@@ -85,7 +85,7 @@ ingress:
   enabled: true
   ingressClassName: nginx
   hosts:
-    - jupyterhub.local
+    - jupyterhub.local.me
   pathType: Prefix
   annotations:
     # Включить поддержку WebSocket для сервиса
@@ -103,5 +103,5 @@ ingress:
     nginx.org/proxy-set-headers: "X-Forwarded-Proto"
   tls:
    - hosts:
-      - jupyterhub.local
+      - jupyterhub.local.me
      secretName: wildcard-local-tls

@@ -9,9 +9,9 @@ global:
       secretName: wildcard-local-tls
   hosts:
     https: true
-    domain: gitlab.local
+    domain: gitlab.local.me
     gitlab:
-      name: gitlab.local
+      name: gitlab.local.me
   ### Настройка внешнего postgres. Взято отсюда https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/examples/values-external-database.yaml
   psql:
     host: postgresql.postgresql.svc.cluster.local

@@ -2,19 +2,19 @@
   "clientId": "airflow",
   "name": "",
   "description": "",
-  "rootUrl": "https://airflow.local/",
-  "adminUrl": "https://airflow.local/",
-  "baseUrl": "https://airflow.local/",
+  "rootUrl": "https://airflow.local.me/",
+  "adminUrl": "https://airflow.local.me/",
+  "baseUrl": "https://airflow.local.me/",
   "surrogateAuthRequired": false,
   "enabled": true,
   "alwaysDisplayInConsole": false,
   "clientAuthenticatorType": "client-secret",
   "secret": "CZdirilsz0Y9XhV63DugIUGg9QlgsxJg",
   "redirectUris": [
-    "https://airflow.local/*"
+    "https://airflow.local.me/*"
   ],
   "webOrigins": [
-    "https://airflow.local/"
+    "https://airflow.local.me/"
   ],
   "notBefore": 0,
   "bearerOnly": false,
@@ -29,8 +29,8 @@
   "protocol": "openid-connect",
   "attributes": {
     "oauth2.jwt.authorization.grant.enabled": "false",
-    "post.logout.redirect.uris": "https://airflow.local/*",
     "frontchannel.logout.session.required": "true",
+    "post.logout.redirect.uris": "https://airflow.local.me/*",
     "oauth2.device.authorization.grant.enabled": "false",
     "use.jwks.url": "false",
     "backchannel.logout.revoke.offline.tokens": "false",

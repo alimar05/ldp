@@ -27,11 +27,11 @@ consoleIngress:
     nginx.org/websocket-services: "minio-console"
   path: /
   hosts:
-    - console.minio.local
+    - console.minio.local.me
   tls:
     - secretName: wildcard-local-tls
       hosts:
-        - console.minio.local
+        - console.minio.local.me
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -180,7 +180,7 @@ environment:
   ## MINIO_SUBNET_LICENSE: "License key obtained from https://subnet.min.io"
   ## MINIO_BROWSER: "off"
   MINIO_SERVER_URL: "http://minio.minio.svc.cluster.local:9000"
-  MINIO_BROWSER_REDIRECT_URL: "https://console.minio.local"
+  MINIO_BROWSER_REDIRECT_URL: "https://console.minio.local.me"
 
 ## The name of a secret in the same kubernetes namespace which contain secret values
 ## This can be useful for LDAP password, etc
@@ -193,12 +193,12 @@ extraSecret: ~
 ## See https://min.io/docs/minio/linux/operations/external-iam/configure-openid-external-identity-management.html for a tutorial on using these variables.
 oidc:
   enabled: true
-  configUrl: "https://keycloak.local/realms/master/.well-known/openid-configuration"
+  configUrl: "https://keycloak.local.me/realms/master/.well-known/openid-configuration"
   # Provide existing client secret from the Kubernetes Secret resource, existing secret will have priority over `clientId` and/or `clientSecret``
   existingClientSecretName: "minio-credentials"
   existingClientIdKey: "clientId"
   existingClientSecretKey: "clientSecret"
   claimName: "policy"
   scopes: "openid,profile"
-  redirectUri: "https://console.minio.local/oauth_callback"
+  redirectUri: "https://console.minio.local.me/oauth_callback"
   displayName: "SSO"

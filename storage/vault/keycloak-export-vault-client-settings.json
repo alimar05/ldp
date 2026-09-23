@@ -2,7 +2,7 @@
   "clientId": "vault",
   "name": "",
   "description": "",
-  "rootUrl": "https://vault.local",
+  "rootUrl": "https://vault.local.me",
   "adminUrl": "",
   "baseUrl": "",
   "surrogateAuthRequired": false,
@@ -11,7 +11,7 @@
   "clientAuthenticatorType": "client-secret",
   "secret": "sHKgbqEZdkCLQITNLTcppi899xuC2EKP",
   "redirectUris": [
-    "https://vault.local/ui/vault/auth/oidc/oidc/callback",
+    "https://vault.local.me/ui/vault/auth/oidc/oidc/callback",
     "http://localhost:8200/ui/vault/auth/oidc/oidc/callback",
     "http://localhost:8250/oidc/callback"
   ],

@@ -10,11 +10,11 @@ server:
     # See: https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation
     ingressClassName: nginx
     hosts:
-      - host: vault.local
+      - host: vault.local.me
     tls:
       - secretName: wildcard-local-tls
         hosts:
-          - vault.local
+          - vault.local.me
 
   extraSecretEnvironmentVars:
     - envName: VAULT_TOKEN
@@ -80,7 +80,7 @@ server:
 
       # Настраивается подключение к keycloak
       vault write auth/oidc/config \
-        oidc_discovery_url="https://keycloak.local/realms/master" \
+        oidc_discovery_url="https://keycloak.local.me/realms/master" \
         oidc_client_id="vault" \
         oidc_client_secret="$KEYCLOAK_CLIENT_SECRET" \
         default_role="keycloak";
@@ -95,7 +95,7 @@ server:
         bound_audiences="vault" \
         user_claim="sub" \
         allowed_redirect_uris="http://localhost:8250/oidc/callback" \
-        allowed_redirect_uris="https://vault.local/ui/vault/auth/oidc/oidc/callback" \
+        allowed_redirect_uris="https://vault.local.me/ui/vault/auth/oidc/oidc/callback" \
         token_policies="keycloak-policy"; 
 
   standalone:

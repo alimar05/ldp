@@ -2,8 +2,8 @@
   "clientId": "gitlab",
   "name": "",
   "description": "",
-  "rootUrl": "https://gitlab.local",
-  "adminUrl": "https://gitlab.local",
+  "rootUrl": "https://gitlab.local.me",
+  "adminUrl": "https://gitlab.local.me",
   "baseUrl": "",
   "surrogateAuthRequired": false,
   "enabled": true,
@@ -11,10 +11,10 @@
   "clientAuthenticatorType": "client-secret",
   "secret": "Yztbr7ZwqSIf8Twf34JrC3t1NA0Z50Bt",
   "redirectUris": [
-    "https://gitlab.local/users/auth/openid_connect/callback"
+    "https://gitlab.local.me/users/auth/openid_connect/callback"
   ],
   "webOrigins": [
-    "https://gitlab.local"
+    "https://gitlab.local.me"
   ],
   "notBefore": 0,
   "bearerOnly": false,
@@ -31,8 +31,8 @@
     "client.secret.creation.time": "1784971629",
     "standard.token.exchange.enabled": "false",
     "oauth2.jwt.authorization.grant.enabled": "false",
-    "post.logout.redirect.uris": "https://gitlab.local",
     "frontchannel.logout.session.required": "true",
+    "post.logout.redirect.uris": "https://gitlab.local.me",
     "oauth2.device.authorization.grant.enabled": "false",
     "backchannel.logout.revoke.offline.tokens": "false",
     "realm_client": "false",
