@@ -13,17 +13,25 @@ spec:
   sparkVersion: 3.5.1
   restartPolicy:
     type: Never
+  arguments:
+    - "1000000"
+  sparkUIOptions:
+    ingressTLS:
+      - hosts:
+          - "spark-pi.spark.sparkui.local.me"
+        secretName: wildcard-local-tls
+
   driver:
     serviceAccount: spark-operator-spark
     cores: 1
     coreLimit: "1200m"
-    memory: 512m
+    memory: 4g
     labels:
       version: 3.5.1
   executor:
     serviceAccount: spark-operator-spark
     cores: 1
-    instances: 2
-    memory: 512m
+    instances: 1
+    memory: 4g
     labels:
       version: 3.5.1

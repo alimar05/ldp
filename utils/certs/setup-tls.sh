@@ -3,7 +3,7 @@
 # Указать домены где требуется сертификат и namespace в котором будет развёрнут k8s secret
 # Если не хотите видеть в браузере Not Secure, придётся добавить домен в список
 BASE_DOMAIN="local.me"
-DOMAINS=("airflow.${BASE_DOMAIN}" "flower.${BASE_DOMAIN}" "gitlab.${BASE_DOMAIN}" "console.minio.${BASE_DOMAIN}" "vault.${BASE_DOMAIN}" "nessie.${BASE_DOMAIN}" "jupyterhub.${BASE_DOMAIN}" "keycloak.${BASE_DOMAIN}" "sparkui.${BASE_DOMAIN}")
+DOMAINS=("airflow.${BASE_DOMAIN}" "flower.${BASE_DOMAIN}" "gitlab.${BASE_DOMAIN}" "console.minio.${BASE_DOMAIN}" "vault.${BASE_DOMAIN}" "nessie.${BASE_DOMAIN}" "jupyterhub.${BASE_DOMAIN}" "keycloak.${BASE_DOMAIN}" "*.spark.sparkui.${BASE_DOMAIN}")
 NAMESPACES=("airflow" "gitlab" "minio" "vault" "nessie" "jupyterhub" "keycloak" "spark")
 # В случае изменении SECRET_NAME, необходимо поменять во всех values-minimum.yaml для helm
 SECRET_NAME="wildcard-local-tls"
