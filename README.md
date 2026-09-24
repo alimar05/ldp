@@ -94,6 +94,8 @@
 
     `values-minimum.yaml`
 
-3) Если требуется доступ извне локального кластера, необходимо в [setup-tls.sh](utils/certs/setup-tls.sh) добавить в переменную `DOMAINS` новый домен и добавить в переменную `NAMESPACES` новый namespace, т. к. каждый компонент размещается в своём. После чего выполнить bash скрипт.
+3) Если требуется доступ извне локального кластера, необходимо в [setup-tls.sh](utils/certs/setup-tls.sh) добавить в переменную `DOMAINS` новый домен и добавить в переменную `NAMESPACES` новый namespace, т. к. каждый компонент размещается в своём. После чего выполнить bash скрипт
+    > [!WARNING]
+    > При использовании `*` в доменах, следует помнить что `*` в имени сертификата заменяет строго одну метку (одно слово между точками) согласно [RFC 6125](https://www.rfc-editor.org/info/rfc6125/)
 
 4) Если компонент использует дополнительные хранилища типа ORDBMS (Object-Relational Database Management System) и/или S3, лучше настроить на единые хранилища [postgresql](storage/postgresql/) и [minio](storage/minio/), добавить в `configuration.sh` идемпотентное создание database и bucket соответственно. В качестве примера можно использовать [configuration.sh](gitlab/configuring.sh)
