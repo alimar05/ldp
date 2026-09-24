@@ -44,20 +44,26 @@
 `values-minimum.yaml` - минимальная конфигурация helm chart необходимая для корректной работы компонента
 
 ## Как пользоваться
-1) Прежде всего нужно добавить в `/etc/hosts` следующее
+1) Прежде всего нужно отправлять запросы с доменом `*.local.me` на `127.0.0.1:2053`. В данном случае на уровне MacOS необходимо выполнить следующие действия:
     ```
-    192.168.139.2   gitlab.local
-    192.168.139.2   registry.gitlab.local
-    192.168.139.2   airflow.local
-    192.168.139.2   flower.local
-    192.168.139.2   vault.local
-    192.168.139.2   console.minio.local
-    192.168.139.2   postgresql.local
-    192.168.139.2   nessie.local
-    192.168.139.2   jupyterhub.local
-    192.168.139.2   keycloak.local
+    # 1. Create the resolver directory (requires root once)
+    sudo mkdir -p /etc/resolver
+
+    # 2. Add resolver config pointing *.local.me to a local DNS responder on port 2053
+    sudo tee /etc/resolver/local.me <<EOF
+    nameserver 127.0.0.1
+    port 2053
+    EOF
+
+    # 3. Flush macOS DNS cache to activate immediately
+    sudo dscacheutil -flushcache
+    sudo killall -HUP mDNSResponder
+
+    # 4. Verify resolution with scutil
+    scutil --dns | grep -A 5 "resolver #.*(domain: local.me)"
     ```
-    для удобного обращения к компонентам снаружи кластера. Адрес локального k8s `192.168.139.2` может отличаться, зависит от реализации.
+    Адрес `127.0.0.1:2053` прослушивается DNS-сервером [dnsmasq](utils/dnsmasq/), который необходимо запустить. Он в свою очередь перенаправляет запросы на локальный кластер, находящийся по адресу `192.168.139.2`.
+    
 2) Установить содержимое [utils](utils)
 
     [setup-tls.sh](utils/certs/setup-tls.sh) - идемотентно выполнит необходимые действия для tls соединения с компонентами
@@ -72,7 +78,7 @@
 
 ## Как добавить новый компонент
 1) Необходимо найти и скачать соответствующий helm chart проект и разместить его внутри директории компонента с таким же названием
-2) Вынести настройки, кофигурацию и скрипты установки в соотвествующие файлы внутри директории компонента рядом с проектом:
+2) Вынести настройки, кофигурацию и скрипты установки в соотвествующие файлы внутри директории компонента рядом с директорией проекта:
 
     `keycloak-export-<название компонента>-client-settings.json`
     
@@ -88,16 +94,6 @@
 
     `values-minimum.yaml`
 
-3) Если требуется доступ извне локального кластера, необходимо для [setup-tls.sh](utils/certs/setup-tls.sh) добавить в переменную
-    ```
-    DOMAINS=("airflow.local" "flower.local" "gitlab.local" "console.minio.local" "vault.local" "nessie.local" "jupyterhub.local" "keycloak.local")
-    ```
-    новый домен и добавить в переменную
-    ```
-    namespaces=("airflow" "gitlab" "minio" "vault" "nessie" "jupyterhub" "keycloak")
-    ```
-    новый namespace, т. к. каждый компонент размещается в своём. После чего выполнить bash скрипт.
-
-    Также соответствующий домен нужно добавить в `/etc/hosts`
+3) Если требуется доступ извне локального кластера, необходимо в [setup-tls.sh](utils/certs/setup-tls.sh) добавить в переменную `DOMAINS` новый домен и добавить в переменную `NAMESPACES` новый namespace, т. к. каждый компонент размещается в своём. После чего выполнить bash скрипт.
 
 4) Если компонент использует дополнительные хранилища типа ORDBMS (Object-Relational Database Management System) и/или S3, лучше настроить на единые хранилища [postgresql](storage/postgresql/) и [minio](storage/minio/), добавить в `configuration.sh` идемпотентное создание database и bucket соответственно. В качестве примера можно использовать [configuration.sh](gitlab/configuring.sh)
