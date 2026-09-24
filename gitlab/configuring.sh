@@ -93,7 +93,7 @@ kubectl create secret generic external-postgresql-registry-secret -n ${NAMESPACE
 
 # Прежде всего в minio должны быть созданы бакеты согласно https://gitlab.com/gitlab-org/charts/gitlab/-/blob/master/doc/advanced/external-object-storage/minio.md
 kubectl run -it -n ${NAMESPACE} --rm minio-cli \
-  --image=minio/mc \
+  --image=minio/mc:RELEASE.2025-04-16T18-13-26Z \
   --restart=Never \
   --command -- /bin/sh -c "\
     mc alias set obs ${ENDPOINT} ${AWS_ACCESS_KEY_ID} '${AWS_SECRET_ACCESS_KEY_ID}' \

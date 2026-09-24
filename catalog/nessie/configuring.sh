@@ -36,7 +36,7 @@ kubectl run -it -n ${NAMESPACE} --rm psql \
   ${PSQL_COMMAND} -d postgres"
 
 kubectl run -it -n ${NAMESPACE} --rm minio-cli \
-  --image=minio/mc \
+  --image=minio/mc:RELEASE.2025-04-16T18-13-26Z \
   --restart=Never \
   --command -- /bin/sh -c "\
     mc alias set obs ${ENDPOINT} ${ACCESS_KEY_ID} '${SECRET_ACCESS_KEY_ID}' \
