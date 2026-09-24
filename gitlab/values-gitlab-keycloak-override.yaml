@@ -4,11 +4,11 @@ args:
   client_options:
     identifier: "gitlab"
     secret: "Yztbr7ZwqSIf8Twf34JrC3t1NA0Z50Bt"
-    redirect_uri: "https://gitlab.local/users/auth/openid_connect/callback"
-    authorization_endpoint: "https://keycloak.local/realms/master/protocol/openid-connect/auth"
+    redirect_uri: "https://gitlab.local.me/users/auth/openid_connect/callback"
+    authorization_endpoint: "https://keycloak.local.me/realms/master/protocol/openid-connect/auth"
     token_endpoint: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/token"
     userinfo_endpoint: "http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/userinfo"
     jwks_uri: http://keycloak-keycloakx-headless.keycloak.svc.cluster.local:8080/realms/master/protocol/openid-connect/certs
   discovery: false
-  issuer: "https://keycloak.local/realms/master"
+  issuer: "https://keycloak.local.me/realms/master"
   scope: ["openid", "profile", "email"]
