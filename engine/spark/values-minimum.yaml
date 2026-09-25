@@ -11,7 +11,7 @@ controller:
     # -- Optionally set default TLS configuration for the Spark UI's ingress. `ingressTLS` in the SparkApplication spec overrides this.
     tls:
       - hosts:
-        - "*.sparkui.local.me"
+        - "*.spark.sparkui.local.me"
         secretName: wildcard-local-tls
 
   # batchScheduler:
@@ -40,7 +40,6 @@ controller:
 
 webhook:
   # -- Pod resource requests and limits for webhook pods.
-  enable: false
   resources: {}
     # limits:
     #   cpu: 100m
