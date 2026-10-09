@@ -75,7 +75,10 @@ dagProcessor:
       kwargs:
         git_conn_id: "gitlab" # airflow найдет его через AIRFLOW_CONN_GITLAB
         tracking_ref: "main"
-        refresh_interval: 60
+        subdir: "src/dags"
+        sparse_dirs:
+          - "src/dags"
+        refresh_interval: 30
 
 flower:
   <<: *resources-template
