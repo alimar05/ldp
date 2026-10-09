@@ -1,0 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: airflow-spark-role
+  namespace: spark # Важно: роль создается в namespace spark
+rules:
+  # Права на управление подами (для логов, мониторинга и очистки)
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "services", "events", "configmaps", "secrets"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
+  # Права на управление ресурсами Spark Operator'а (CRD)
+  - apiGroups: ["sparkoperator.k8s.io"]
+    resources: ["sparkapplications", "sparkapplications/status", "sparkapplications/finalizers"]
+    verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: airflow-spark-binding
+  namespace: spark # Важно: привязка тоже в namespace spark
+subjects:
+  - kind: ServiceAccount
+    name: airflow-worker
+    namespace: airflow
+roleRef:
+  kind: Role
+  name: airflow-spark-role
+  apiGroup: rbac.authorization.k8s.io

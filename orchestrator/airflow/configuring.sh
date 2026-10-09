@@ -31,3 +31,6 @@ kubectl run -it -n ${NAMESPACE} --rm psql \
 kubectl create secret generic external-postgresql-secret -n ${NAMESPACE} \
     --from-literal=connection=postgresql://${USERNAME}:${PASSWORD}@postgresql.postgresql.svc.cluster.local:5432/${DATABASE} \
     --dry-run=client -o yaml | kubectl apply -f -
+
+# Для запуска SparkApplication через SparkKubernetesOperator
+kubectl apply -f spark-rbac.yaml
