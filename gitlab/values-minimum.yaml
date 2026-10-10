@@ -53,7 +53,7 @@ global:
 
 registry:
   # https://docs.gitlab.com/charts/charts/registry/metadata_database/#enable-for-new-registries
-  enabled: false
+  enabled: true
   database:
     enabled: true
     name: registry  # must match the database name you created above
@@ -92,11 +92,11 @@ redis:
 # Reduce replica counts, reducing CPU & memory requirements
 gitlab:
   gitlab-exporter:
-    enabled: false
+    enabled: true
   toolbox:
     enabled: false
   kas:
-    enabled: false
+    enabled: true
     minReplicas: 1
     maxReplicas: 1
     resources:
@@ -122,7 +122,7 @@ gitlab:
           cpu: 10m
           memory: 10Mi
   sidekiq:
-    enabled: false
+    enabled: true
     minReplicas: 1
     maxReplicas: 1
     resources:
