@@ -26,7 +26,7 @@ cat << 'EOF' > values-gitlab-runner-override.yaml
 ## Installation & configuration of gitlab/gitlab-runner
 ## See dependencies in Chart.yaml for current version
 gitlab-runner:
-  install: false
+  install: true
   gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181
   runners:
     config: |
@@ -37,17 +37,16 @@ gitlab-runner:
         image = "ubuntu:22.04"
         # "arm64" или "x86_64" зависит от платформы
         helper_image = "registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:arm64-v18.6.3"
-        {{- if .Values.global.minio.enabled }}
         [runners.cache]
           Type = "s3"
-          Path = "gitlab-runner"
+          Path = "de"
           Shared = true
           [runners.cache.s3]
-            ServerAddress = {{ include "gitlab-runner.cache-tpl.s3ServerAddress" . }}
-            BucketName = "runner-cache"
-            BucketLocation = "us-east-1"
-            Insecure = false
-        {{ end }}
+            ServerAddress = "minio.minio.svc.cluster.local:9000"
+            BucketName = "gitlab-runner"
+            AccessKey = "AKIAIOSFODNM7EXAMPLE"
+            SecretKey = "wJalrXUtnFEMI/K7MDENG/bRxRfiCYEXAMPLEKE"
+            Insecure = true
 EOF
 # Gitlab keycloak oidc
 cat << 'EOF' > values-gitlab-keycloak-override.yaml
@@ -103,6 +102,7 @@ kubectl run -it -n ${NAMESPACE} --rm minio-cli \
     && mc mb --ignore-existing obs/gitlab-lfs-storage \
     && mc mb --ignore-existing obs/gitlab-packages-storage \
     && mc mb --ignore-existing obs/gitlab-uploads-storage \
+    && mc mb --ignore-existing obs/gitlab-runner \
     && mc mb --ignore-existing obs/gitlab-registry-storage"
 
 ## Создаём секреты, если их нет
